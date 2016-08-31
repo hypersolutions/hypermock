@@ -1,4 +1,6 @@
-﻿namespace HyperMock.Universal.Examples
+﻿using System.Threading.Tasks;
+
+namespace HyperMock.Universal.Examples
 {
     public interface IAccountService
     {
@@ -6,5 +8,6 @@
         void Credit(string account, int amount);
         bool CanDebit(string account, int amount);
         void Debit(string account, int amount);
+        Task<string> DownloadStatementsAsync(string account);
     }
 }

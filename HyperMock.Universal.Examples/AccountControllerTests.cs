@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace HyperMock.Universal.Examples
@@ -123,6 +124,18 @@ namespace HyperMock.Universal.Examples
             _mockService.SetupSet(s => s.HasAccounts).SetValue(false).Throws<NotSupportedException>();
 
             Assert.ThrowsException<NotSupportedException>(() => _controller.Manage(false));
+        }
+
+        [TestMethod]
+        public async Task DownloadStatementsAsyncReturnsStatement()
+        {
+            var info = new AccountInfo { Number = "1234" };
+
+            _mockService.Setup(s => s.DownloadStatementsAsync("1234")).Returns(Task.Run(() => "Statement"));
+
+            var statement = await _controller.DownloadStatementsAsync(info);
+
+            Assert.AreEqual("Statement", statement);
         }
     }
 }

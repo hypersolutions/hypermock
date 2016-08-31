@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace HyperMock.Windows.Examples
 {
     public class AccountController
@@ -28,6 +30,11 @@ namespace HyperMock.Windows.Examples
         public void Manage(bool hasAccounts)
         {
             _accountService.HasAccounts = hasAccounts;
+        }
+
+        public async Task<string> DownloadStatementsAsync(AccountInfo info)
+        {
+            return await _accountService.DownloadStatementsAsync(info.Number);
         }
     }
 }
