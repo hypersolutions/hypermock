@@ -91,6 +91,19 @@ namespace HyperMock.Universal.Examples
         }
 
         [TestMethod]
+        public void DebitCorrectAccountMatchingRegex()
+        {
+            var info1 = new AccountInfo { Number = "1234", DebitAmount = 100 };
+            var info2 = new AccountInfo { Number = "12345678", DebitAmount = 50 };
+            _mockService.Setup(s => s.CanDebit(Param.IsRegex("^[0-9]{4}$"), info1.DebitAmount)).Returns(true);
+
+            _controller.Debit(info1);
+
+            _mockService.Verify(s => s.Debit(info1.Number, info1.DebitAmount), Occurred.Once());
+            _mockService.Verify(s => s.Debit(info2.Number, info2.DebitAmount), Occurred.Never());
+        }
+
+        [TestMethod]
         public void HasAccounts()
         {
             _mockService.SetupGet(s => s.HasAccounts).Returns(true);

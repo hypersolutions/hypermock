@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ExactParameterMatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ParameterMatcherFactoryTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\PredicateParameterMatcherTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Matchers\RegexParameterMatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockProxyDispatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setups\SetupInfoListTests.cs" />

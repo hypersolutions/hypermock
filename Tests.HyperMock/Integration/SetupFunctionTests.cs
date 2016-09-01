@@ -149,6 +149,42 @@ namespace Tests.HyperMock.Integration
             }
         }
 
+        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
+        [TestMethod]
+        public void SetupReturnsTrueForRegexStringMatch()
+        {
+            var data = new[] { "12345678", "87654321" };
+
+            foreach (var accountNumber in data)
+            {
+                var info = new AccountInfo { Number = accountNumber, DebitAmount = 100 };
+                MockFor<IAccountService>().Setup(
+                    s => s.CanDebit(Param.IsRegex("^[0-9]{8}$"), 100)).Returns(true);
+
+                Subject.Debit(info);
+
+                MockFor<IAccountService>().Verify(s => s.Debit(info.Number, info.DebitAmount), Occurred.Once());
+            }
+        }
+
+        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
+        [TestMethod]
+        public void SetupReturnsTrueForRegexStringMismatch()
+        {
+            var data = new[] {"1234567", "123456789", "ABCDEFGH"};
+
+            foreach (var accountNumber in data)
+            {
+                var info = new AccountInfo { Number = accountNumber, DebitAmount = 100 };
+                MockFor<IAccountService>().Setup(
+                    s => s.CanDebit(Param.IsRegex("^[0-9]{8}$"), 100)).Returns(true);
+
+                Subject.Debit(info);
+
+                MockFor<IAccountService>().Verify(s => s.Debit(info.Number, info.DebitAmount), Occurred.Never());
+            }
+        }
+
         [TestMethod]
         public async Task SetupAsyncGetsStatementAsync()
         {

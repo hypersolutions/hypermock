@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ParameterMatcherAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ParameterMatcherFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\PredicateParameterMatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Matchers\RegexParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockProxyDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Occurred.cs" />

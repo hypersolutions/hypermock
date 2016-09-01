@@ -40,9 +40,11 @@ namespace HyperMock.Matchers
             if (methodCall.Arguments.Count == 0)
                 return (ParameterMatcher)Activator.CreateInstance(paramMatcherType);
 
-            var predicateDeletegate = Expression.Lambda(methodCall.Arguments[0]).Compile().DynamicInvoke();
+            var delegateExpr = Expression.Lambda(methodCall.Arguments[0]).Compile().DynamicInvoke();
 
-            return new PredicateParameterMatcher(predicateDeletegate);
+            return delegateExpr is string ?
+                (ParameterMatcher)new RegexParameterMatcher(delegateExpr.ToString()) 
+                : new PredicateParameterMatcher(delegateExpr);
         }
     }
 }

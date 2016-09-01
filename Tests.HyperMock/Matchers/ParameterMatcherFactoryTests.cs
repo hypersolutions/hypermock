@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
-using HyperMock;
 #if WINDOWS_UWP
-using HyperMock.Matchers;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #else
-using HyperMock.Matchers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
+using HyperMock;
+using HyperMock.Matchers;
 
 namespace Tests.HyperMock.Matchers
 {
@@ -50,6 +49,16 @@ namespace Tests.HyperMock.Matchers
             var matcher = _factory.Create(expression);
 
             Assert.IsInstanceOfType(matcher, typeof(AnyParameterMatcher));
+        }
+
+        [TestMethod]
+        public void CreateMethodWithParamRegexArgReturnsRegexMatcher()
+        {
+            Expression<Func<string>> expression = () => Param.IsRegex("^[0-9]{8}$");
+
+            var matcher = _factory.Create(expression);
+
+            Assert.IsInstanceOfType(matcher, typeof(RegexParameterMatcher));
         }
     }
 }

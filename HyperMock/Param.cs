@@ -30,5 +30,16 @@ namespace HyperMock
         {
             return default(T);
         }
+
+        /// <summary>
+        /// Provides a regex pattern approach to determining a match for a parameter.
+        /// </summary>
+        /// <param name="pattern">Regex pattern to match</param>
+        /// <returns></returns>
+        [ParameterMatcher(typeof(RegexParameterMatcher))]
+        public static string IsRegex(string pattern)
+        {
+            return null;
+        }
     }
 }
