@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HyperMock.Windows</id>
+    <title>Hyperbolic Mocking Framework - Windows</title>
+    <version>2.0.1</version>
+    <authors>Hyperbolic Solutions</authors>
+    <owners>Hyperbolic Solutions</owners>
+    <projectUrl>https://github.com/hypersolutions/hypermock</projectUrl>
+    <licenseUrl>https://github.com/hypersolutions/hypermock/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Hyperbolic Solutions simple mocking framework for unit testing</description>
+    <releaseNotes>Added strong-typing of behaviors.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Windows Mocking Mock Unit Test UnitTesting</tags>
+    <dependencies/>
+  </metadata>
+  <files>
+    <file src="HyperMock.Windows\bin\Release\HyperMock.Windows.dll" target="lib/net40" />
+  </files>
+</package>
