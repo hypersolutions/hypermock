@@ -13,24 +13,14 @@ namespace HyperMock.Matchers
         {
             var methodCall = expression.Body as MethodCallExpression;
 
-            // No method call info - return the standard exact matcher
-            if (methodCall == null) return new ExactParameterMatcher();
-
-            // We have a param set, find the matcher to use...
-            if (methodCall.Method.DeclaringType == typeof(Param))
-            {
-                var paramMatcherAttr = methodCall.Method.GetCustomAttributes(
+            // Find the parameter matcher attribute (if exists)
+            var paramMatcherAttr = methodCall?.Method.GetCustomAttributes(
                     typeof(ParameterMatcherAttribute), false).FirstOrDefault() as ParameterMatcherAttribute;
 
-                // No attribute assigned (shouldn't happen) - return the standard exact matcher
-                if (paramMatcherAttr == null) return new ExactParameterMatcher();
-
-                // We have a matcher, return the instance...
-                return CreateFromExpression(paramMatcherAttr.ParameterMatcherType, expression);
-            }
-
-            // Got here - return the standard exact matcher
-            return new ExactParameterMatcher();
+            // If exists then create the matcher else return the exact matcher
+            return paramMatcherAttr != null 
+                ? CreateFromExpression(paramMatcherAttr.ParameterMatcherType, expression) 
+                : new ExactParameterMatcher();
         }
 
         private ParameterMatcher CreateFromExpression(Type paramMatcherType, LambdaExpression expression)
