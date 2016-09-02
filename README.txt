@@ -38,3 +38,19 @@ var data = []{ 1,2,3} - whatever your values are.
 
 This will be reviewed in time when hopefully a framework that works well for all platforms and test runners becomes available.
 
+
+Branches
+--------
+
+From release 2.0.2 onwards, there will be release branches for making changes and fixing bugs. The structure is thus:
+
+master
+    release-2.0.2
+        pr-123
+        pr-456
+        etc
+    release-2.0.3
+        pr-789
+        etc
+
+The NuGet packages will be released from the main release branch. At this stage any changes to the release branch will be pushed back into the master branch.
