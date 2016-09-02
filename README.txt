@@ -54,3 +54,4 @@ master
         etc
 
 The NuGet packages will be released from the main release branch. At this stage any changes to the release branch will be pushed back into the master branch.
+
