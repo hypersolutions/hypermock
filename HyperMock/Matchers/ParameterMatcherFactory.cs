@@ -27,14 +27,9 @@ namespace HyperMock.Matchers
         {
             var methodCall = (MethodCallExpression)expression.Body;
 
-            if (methodCall.Arguments.Count == 0)
-                return (ParameterMatcher)Activator.CreateInstance(paramMatcherType);
-
-            var delegateExpr = Expression.Lambda(methodCall.Arguments[0]).Compile().DynamicInvoke();
-
-            return delegateExpr is string ?
-                (ParameterMatcher)new RegexParameterMatcher(delegateExpr.ToString()) 
-                : new PredicateParameterMatcher(delegateExpr);
+            var matcher = (ParameterMatcher)Activator.CreateInstance(paramMatcherType);
+            matcher.CallContext = methodCall;
+            return matcher;
         }
     }
 }

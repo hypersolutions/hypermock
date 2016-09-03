@@ -1,4 +1,8 @@
-﻿#if WINDOWS_UWP
+﻿
+using System;
+using System.Linq.Expressions;
+using HyperMock;
+#if WINDOWS_UWP
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,12 +14,40 @@ namespace Tests.HyperMock.Matchers
     [TestClass]
     public class RegexParameterMatcherTests
     {
+        private RegexParameterMatcher _matcher;
+
+        [TestInitialize]
+        public void BeforeEachTest()
+        {
+            _matcher = new RegexParameterMatcher();
+        }
+
+        [TestMethod]
+        public void IsMatchReturnsFalseForNullCallContext()
+        {
+            var isMatch = _matcher.IsMatch(null, null);
+
+            Assert.IsFalse(isMatch);
+        }
+
+        [TestMethod]
+        public void IsMatchReturnsFalseForNoCallContextArgs()
+        {
+            Expression<Func<string>> expression = () => TestFunction();
+            _matcher.CallContext = expression.Body as MethodCallExpression;
+
+            var isMatch = _matcher.IsMatch(null, null);
+
+            Assert.IsFalse(isMatch);
+        }
+
         [TestMethod]
         public void IsMatchReturnsFalseForNullPatternMatch()
         {
-            var matcher = new RegexParameterMatcher(null);
+            Expression<Func<string>> expression = () => Param.IsRegex(null);
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, null);
+            var isMatch = _matcher.IsMatch(null, null);
 
             Assert.IsFalse(isMatch);
         }
@@ -23,9 +55,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsTrueForEmptyPatternMatch()
         {
-            var matcher = new RegexParameterMatcher("");
+            Expression<Func<string>> expression = () => Param.IsRegex("");
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, "");
+            var isMatch = _matcher.IsMatch(null, "");
 
             Assert.IsTrue(isMatch);
         }
@@ -33,9 +66,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForEmptyPatternAndNullValueMatch()
         {
-            var matcher = new RegexParameterMatcher("");
+            Expression<Func<string>> expression = () => Param.IsRegex("");
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, null);
+            var isMatch = _matcher.IsMatch(null, null);
 
             Assert.IsFalse(isMatch);
         }
@@ -43,9 +77,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsTrueForPatternMatch()
         {
-            var matcher = new RegexParameterMatcher("^[0-9]{8}$");
+            Expression<Func<string>> expression = () => Param.IsRegex("^[0-9]{8}$");
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, "12345678");
+            var isMatch = _matcher.IsMatch(null, "12345678");
 
             Assert.IsTrue(isMatch);
         }
@@ -53,16 +88,21 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForPatternMismatch()
         {
-            var data = new[] {"1234567", "123456789", "ABCDEFGH"};
+            var data = new[] { "1234567", "123456789", "ABCDEFGH" };
+            Expression<Func<string>> expression = () => Param.IsRegex("^[0-9]{8}$");
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
             foreach (var value in data)
             {
-                var matcher = new RegexParameterMatcher("^[0-9]{8}$");
-
-                var isMatch = matcher.IsMatch(null, value);
+                var isMatch = _matcher.IsMatch(null, value);
 
                 Assert.IsFalse(isMatch);
             }
+        }
+
+        private string TestFunction()
+        {
+            return null;
         }
     }
 }

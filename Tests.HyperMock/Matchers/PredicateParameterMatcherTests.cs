@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq.Expressions;
 #if WINDOWS_UWP
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
+using HyperMock.Exceptions;
 using HyperMock.Matchers;
 
 namespace Tests.HyperMock.Matchers
@@ -11,13 +13,35 @@ namespace Tests.HyperMock.Matchers
     [TestClass]
     public class PredicateParameterMatcherTests
     {
+        private PredicateParameterMatcher _matcher;
+
+        [TestInitialize]
+        public void BeforeEachTest()
+        {
+            _matcher = new PredicateParameterMatcher();
+        }
+
+#if WINDOWS_UWP
+        [TestMethod]
+        public void IsMatchThrowsExceptionForInvalidCallContext()
+        {
+            Assert.ThrowsException<MockException>(() => _matcher.IsMatch(null, null));
+        }
+#else
+        [TestMethod, ExpectedException(typeof(MockException))]
+        public void IsMatchThrowsExceptionForInvalidCallContext()
+        {
+            _matcher.IsMatch(null, null);
+        }
+#endif
+
         [TestMethod]
         public void IsMatchReturnsTrueForMatchingSingleConditionOnActualValue()
         {
-            Func<int, bool> func = p => p < 10;
-            var matcher = new PredicateParameterMatcher(func);
+            Expression<Func<bool>> expression = () => TestFunction(p => p < 10);
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, 9);
+            var isMatch = _matcher.IsMatch(null, 9);
 
             Assert.IsTrue(isMatch);
         }
@@ -25,10 +49,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForMatchingSingleConditionOnActualValue()
         {
-            Func<int, bool> func = p => p < 10;
-            var matcher = new PredicateParameterMatcher(func);
+            Expression<Func<bool>> expression = () => TestFunction(p => p < 10);
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            var isMatch = matcher.IsMatch(null, 10);
+            var isMatch = _matcher.IsMatch(null, 10);
 
             Assert.IsFalse(isMatch);
         }
@@ -38,13 +62,12 @@ namespace Tests.HyperMock.Matchers
         public void IsMatchReturnsTrueForMatchingMultipleConditionsOnActualValue()
         {
             var data = new[] {2, 3, 4};
+            Expression<Func<bool>> expression = () => TestFunction(p => p > 1 && p < 5);
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
             foreach (var value in data)
             {
-                Func<int, bool> func = p => p > 1 && p < 5;
-                var matcher = new PredicateParameterMatcher(func);
-
-                var isMatch = matcher.IsMatch(null, value);
+                var isMatch = _matcher.IsMatch(null, value);
 
                 Assert.IsTrue(isMatch);
             }
@@ -55,16 +78,20 @@ namespace Tests.HyperMock.Matchers
         public void IsMatchReturnsFalseForMatchingMultipleConditionsOnActualValue()
         {
             var data = new[] { 1, 5 };
+            Expression<Func<bool>> expression = () => TestFunction(p => p > 1 && p < 5);
+            _matcher.CallContext = expression.Body as MethodCallExpression;
 
             foreach (var value in data)
             {
-                Func<int, bool> func = p => p > 1 && p < 5;
-                var matcher = new PredicateParameterMatcher(func);
-
-                var isMatch = matcher.IsMatch(null, value);
+                var isMatch = _matcher.IsMatch(null, value);
 
                 Assert.IsFalse(isMatch);
             }
+        }
+
+        private bool TestFunction(Func<int, bool> func)
+        {
+            return func(10);
         }
     }
 }

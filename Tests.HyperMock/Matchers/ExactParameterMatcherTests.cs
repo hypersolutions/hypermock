@@ -10,12 +10,18 @@ namespace Tests.HyperMock.Matchers
     [TestClass]
     public class ExactParameterMatcherTests
     {
+        private ExactParameterMatcher _matcher;
+
+        [TestInitialize]
+        public void BeforeEachTest()
+        {
+            _matcher = new ExactParameterMatcher();
+        }
+
         [TestMethod]
         public void IsMatchReturnsTrueForNull()
         {
-            var matcher = new ExactParameterMatcher();
-
-            var result = matcher.IsMatch(null, null);
+            var result = _matcher.IsMatch(null, null);
 
             Assert.IsTrue(result);
         }
@@ -23,11 +29,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsTrueForSameReferenceTypeInstance()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = new object();
             var actual = expected;
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsTrue(result);
         }
@@ -35,11 +40,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForDifferentReferenceTypeInstance()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = new object();
             var actual = new object();
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsFalse(result);
         }
@@ -47,11 +51,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsTrueForSameValueTypeInstance()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = 10;
             var actual = expected;
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsTrue(result);
         }
@@ -59,11 +62,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForDifferentValueTypeInstance()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = 10;
             var actual = 20;
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsFalse(result);
         }
@@ -71,11 +73,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsTrueForSameStringValue()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = "Homer";
             var actual = "Homer";
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsTrue(result);
         }
@@ -83,11 +84,10 @@ namespace Tests.HyperMock.Matchers
         [TestMethod]
         public void IsMatchReturnsFalseForDifferentStringValue()
         {
-            var matcher = new ExactParameterMatcher();
             var expected = "Homer";
             var actual = "Marge";
 
-            var result = matcher.IsMatch(expected, actual);
+            var result = _matcher.IsMatch(expected, actual);
 
             Assert.IsFalse(result);
         }
