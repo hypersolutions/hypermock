@@ -8,14 +8,14 @@ using Tests.HyperMock.Support;
 namespace Tests.HyperMock.Integration
 {
     [TestClass]
-    public class SetupGetIndexerTests : TestBase<AccountController>
+    public class SetupIndexerTests : TestBase<AccountController>
     {
         [TestMethod]
         public void SetupGetIndexerReturnsMatchingAccount()
         {
-            MockFor<IAccountService>().SetupGet(
+            MockFor<IAccountService>().Setup(
                 s => s["12345678"]).Returns(new Account { Name = "Acc1", Number = "12345678" });
-            MockFor<IAccountService>().SetupGet(
+            MockFor<IAccountService>().Setup(
                 s => s["87654321"]).Returns(new Account { Name = "Acc2", Number = "87654321" });
 
             var accountInfo = Subject.GetAccount("12345678");

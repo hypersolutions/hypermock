@@ -19,7 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\VisitListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\RaiseEventTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetIndexerTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupIndexerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupSetPropertyTests.cs" />
