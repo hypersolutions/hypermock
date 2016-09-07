@@ -1,12 +1,32 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Tests.HyperMock.Support
 {
     public class AccountService : IAccountService
     {
+        // ReSharper disable once CollectionNeverUpdated.Local
+        private readonly List<Account> _accounts = new List<Account>();
+
         public bool HasAccounts { get; set; }
 
-        public Account this[string number] => null;
+        public Account this[string number]
+        {
+            get
+            {
+                return _accounts.FirstOrDefault(a => a.Number == number);
+            }
+            set
+            {
+                var account = _accounts.FirstOrDefault(a => a.Number == number);
+
+                if (account != null)
+                {
+                    account.Name = value.Name;
+                }
+            }
+        }
 
         public void Credit(string account, int amount)
         {

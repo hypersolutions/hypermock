@@ -42,5 +42,12 @@ namespace Tests.HyperMock.Support
             var account = _accountService[number];
             return new AccountInfo {Name = account.Name, Number = account.Number};
         }
+
+        public void UpdateAccount(string number, string name)
+        {
+            var account = _accountService[number];
+            account.Name = name;
+            _accountService[number] = account;
+        }
     }
 }
