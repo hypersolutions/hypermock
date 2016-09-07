@@ -36,5 +36,11 @@ namespace Tests.HyperMock.Support
         {
             return await _accountService.GetStatementAsync(info.Number);
         }
+
+        public AccountInfo GetAccount(string number)
+        {
+            var account = _accountService[number];
+            return new AccountInfo {Name = account.Name, Number = account.Number};
+        }
     }
 }

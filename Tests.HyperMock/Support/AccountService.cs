@@ -6,6 +6,8 @@ namespace Tests.HyperMock.Support
     {
         public bool HasAccounts { get; set; }
 
+        public Account this[string number] => null;
+
         public void Credit(string account, int amount)
         {
             

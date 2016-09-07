@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\VisitListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\RaiseEventTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetIndexerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupSetPropertyTests.cs" />
@@ -34,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MockProxyDispatcherTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setups\SetupInfoListTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\Account.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountService.cs" />
