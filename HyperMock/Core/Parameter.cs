@@ -11,5 +11,6 @@ namespace HyperMock.Core
 
         internal object Value { get; set; }
         internal ParameterMatcher Matcher { get; set; }
+        internal ParameterType Type { get; set; }
     }
 }
