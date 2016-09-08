@@ -66,11 +66,18 @@ namespace HyperMock.Core
         private Visit FindGetPropertyVisit(LambdaExpression expression, object[] values = null)
         {
             var body = expression.Body as MemberExpression;
+            MethodInfo getMethodInfo;
 
-            if (body == null) return null;
-
-            var propInfo = (PropertyInfo)body.Member;
-            var getMethodInfo = propInfo.GetMethod;
+            if (body == null)
+            {
+                var indexerBody = expression.Body as MethodCallExpression;
+                getMethodInfo = indexerBody?.Method;
+            }
+            else
+            {
+                var propInfo = (PropertyInfo)body.Member;
+                getMethodInfo = propInfo.GetMethod;
+            }
 
             if (getMethodInfo == null) return null;
 
@@ -83,18 +90,28 @@ namespace HyperMock.Core
         private Visit FindSetPropertyVisit(LambdaExpression expression, object[] values = null)
         {
             var body = expression.Body as MemberExpression;
+            MethodInfo setMethodInfo;
 
-            if (body == null) return null;
-
-            var propInfo = (PropertyInfo)body.Member;
-            var setMethodInfo = propInfo.SetMethod;
+            if (body == null)
+            {
+                var indexerBody = expression.Body as MethodCallExpression;
+                setMethodInfo = indexerBody?.Method;
+            }
+            else
+            {
+                var propInfo = (PropertyInfo)body.Member;
+                setMethodInfo = propInfo.SetMethod;
+            }
 
             if (setMethodInfo == null) return null;
 
-            if (values != null && values.Length > 0)
-                return RecordedVisits.FirstOrDefault(v => v.Name == setMethodInfo.Name && IsMatchFor(values, v.Args));
+            // Special case! The way the mock is setup means that for sets the method may come through as a get!
+            var name = setMethodInfo.Name.Replace("get_Item", "set_Item");
 
-            return RecordedVisits.FirstOrDefault(v => v.Name == setMethodInfo.Name);
+            if (values != null && values.Length > 0)
+                return RecordedVisits.FirstOrDefault(v => v.Name == name && IsMatchFor(values, v.Args));
+
+            return RecordedVisits.FirstOrDefault(v => v.Name == name);
         }
 
         private static bool IsMatchFor(object[] args, object[] otherArgs)

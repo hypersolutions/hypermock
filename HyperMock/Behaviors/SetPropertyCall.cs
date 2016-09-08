@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using HyperMock.Core;
 using HyperMock.Matchers;
 using HyperMock.Setups;
@@ -23,7 +25,12 @@ namespace HyperMock.Behaviors
         /// <param name="setValue">Value to return</param>
         public SetPropertyCall<TValue> SetValue(TValue setValue)
         {
-            SetupInfo.Parameters = new[] {new Parameter {Value = setValue, Matcher = new ExactParameterMatcher() } };
+            var parameter = new Parameter {Value = setValue, Matcher = new ExactParameterMatcher()};
+
+            SetupInfo.Parameters = SetupInfo.Parameters != null
+                ? new List<Parameter>(SetupInfo.Parameters).Union(new[] {parameter}).ToArray()
+                : new[] {parameter};
+            
             return this;
         }
 

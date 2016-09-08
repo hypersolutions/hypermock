@@ -104,12 +104,22 @@ namespace Tests.HyperMock.Core
         }
 
         [TestMethod]
-        public void BuildFromReturnsNoParametersForEmptyMethodArgs()
+        public void BuildFromReturnsNoParametersForNullMethodExpression()
         {
             Expression<Action> expression = () => TestMethod();
             var body = expression.Body as MethodCallExpression;
 
             var parameters = _parameterList.BuildFrom(body, expression);
+
+            Assert.AreEqual(0, parameters.Length);
+        }
+
+        [TestMethod]
+        public void BuildFromReturnsNoParametersForEmptyMethodArgs()
+        {
+            Expression<Action> expression = () => TestMethod();
+
+            var parameters = _parameterList.BuildFrom(null, expression);
 
             Assert.AreEqual(0, parameters.Length);
         }

@@ -33,14 +33,17 @@ namespace HyperMock.Core
         {
             var parameters = new List<Parameter>();
 
-            foreach (var argument in body.Arguments)
+            if (body != null)
             {
-                var lambda = Expression.Lambda(argument, expression.Parameters);
-                var compiledDelegate = lambda.Compile();
-                var value = lambda.Parameters.Count == 0
-                    ? compiledDelegate.DynamicInvoke()
-                    : compiledDelegate.DynamicInvoke(new object[1]);
-                parameters.Add(new Parameter { Value = value, Matcher = _matcherFactory.Create(lambda) });
+                foreach (var argument in body.Arguments)
+                {
+                    var lambda = Expression.Lambda(argument, expression.Parameters);
+                    var compiledDelegate = lambda.Compile();
+                    var value = lambda.Parameters.Count == 0
+                        ? compiledDelegate.DynamicInvoke()
+                        : compiledDelegate.DynamicInvoke(new object[1]);
+                    parameters.Add(new Parameter {Value = value, Matcher = _matcherFactory.Create(lambda)});
+                }
             }
 
             return parameters.ToArray();

@@ -14,7 +14,7 @@ namespace Tests.HyperMock.Integration
     {
 #if WINDOWS_UWP
         [TestMethod]
-        public void SetupThrowsExceptionType()
+        public void SetupSetThrowsExceptionType()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(true).Throws<NotSupportedException>();
 
@@ -22,7 +22,7 @@ namespace Tests.HyperMock.Integration
         }
 
         [TestMethod]
-        public void SetupThrowsExceptionInstance()
+        public void SetupSetThrowsExceptionInstance()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(true).Throws(new NotSupportedException());
 
@@ -31,7 +31,7 @@ namespace Tests.HyperMock.Integration
 
         // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
         [TestMethod]
-        public void SetupThrowsExceptionTypeForAny()
+        public void SetupSetThrowsExceptionTypeForAny()
         {
             var data = new[] {true, false};
 
@@ -44,7 +44,7 @@ namespace Tests.HyperMock.Integration
         }
 #else
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void SetupThrowsExceptionType()
+        public void SetupSetThrowsExceptionType()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(true).Throws<NotSupportedException>();
 
@@ -52,7 +52,7 @@ namespace Tests.HyperMock.Integration
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void SetupThrowsExceptionInstance()
+        public void SetupSetThrowsExceptionInstance()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(true).Throws(new NotSupportedException());
 
@@ -75,7 +75,7 @@ namespace Tests.HyperMock.Integration
 #endif
 
         [TestMethod]
-        public void SetupDoesNotThrowExceptionType()
+        public void SetupSetDoesNotThrowExceptionType()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(false).Throws<NotSupportedException>();
 
@@ -90,7 +90,7 @@ namespace Tests.HyperMock.Integration
         }
 
         [TestMethod]
-        public void SetupDoesNotThrowExceptionInstance()
+        public void SetupSetDoesNotThrowExceptionInstance()
         {
             MockFor<IAccountService>().SetupSet(s => s.HasAccounts).SetValue(false).Throws(new NotSupportedException());
 

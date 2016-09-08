@@ -273,11 +273,60 @@ namespace Tests.HyperMock.Setups
             Assert.IsNull(setupInfo);
         }
 
+        [TestMethod]
+        public void AddOrGetIndexGetterReturnsSetupInfoForMatch()
+        {
+            Expression<Func<int>> expression = () => this["Homer"];
+
+            var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
+
+            Assert.IsNotNull(setupInfo);
+        }
+
+        [TestMethod]
+        public void AddOrGetIndexGetterReturnsExistingSetupInfoForMatch()
+        {
+            Expression<Func<int>> expression = () => this["Homer"];
+            var existingSetupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
+
+            var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
+
+            Assert.AreEqual(existingSetupInfo, setupInfo);
+        }
+
+        [TestMethod]
+        public void AddOrGetIndexSetterReturnsSetupInfoForMatch()
+        {
+            Expression<Func<int>> expression = () => this["Homer"];
+
+            var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
+
+            Assert.IsNotNull(setupInfo);
+        }
+
+        [TestMethod]
+        public void AddOrGetIndexSetterReturnsExistingSetupInfoForMatch()
+        {
+            Expression<Func<int>> expression = () => this["Homer"];
+            var existingSetupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
+
+            var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
+
+            Assert.AreEqual(existingSetupInfo, setupInfo);
+        }
+
         // ReSharper disable once UnassignedGetOnlyAutoProperty
         private int TestProperty { get; }
         
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int TestProperty2 { get; set; }
+
+        private int this[string name]
+        {
+            get { return name != null ? TestProperty2 : 0; }
+            // ReSharper disable once UnusedMember.Local
+            set { TestProperty2 = value; }
+        }
 
         private void TestMethod()
         {

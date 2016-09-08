@@ -170,7 +170,7 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsSetPropertyVisit()
         {
-            _visits.Record("set_Age", new object[0]);
+            _visits.Record("set_Age", new object[] {30});
             Expression<Func<int>> expression = () => Age;
 
             var visit = _visits.FindBy(expression, CallType.SetProperty);
@@ -189,10 +189,39 @@ namespace Tests.HyperMock.Core
             Assert.IsNull(visit);
         }
 
+        [TestMethod]
+        public void FindByReturnsGetIndexerPropertyVisit()
+        {
+            _visits.Record("get_Item", new object[] {"Homer"});
+            Expression<Func<int>> expression = () => this["Homer"];
+
+            var visit = _visits.FindBy(expression, CallType.GetProperty);
+
+            Assert.IsNotNull(visit);
+        }
+
+        [TestMethod]
+        public void FindByReturnsSetIndexerPropertyVisit()
+        {
+            _visits.Record("set_Item", new object[] { "Homer" });
+            Expression<Func<int>> expression = () => this["Homer"];
+
+            var visit = _visits.FindBy(expression, CallType.SetProperty, new object[] {"Homer"});
+
+            Assert.IsNotNull(visit);
+        }
+
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int Age { get; set; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private string Gender { get; set; }
+
+        private int this[string name]
+        {
+            get { return name != null ? Age : 0; }
+            // ReSharper disable once UnusedMember.Local
+            set { Age = value; }
+        }
 
         private void Save(int x)
         {
