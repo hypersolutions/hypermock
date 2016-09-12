@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using HyperMock.Core;
+using HyperMock.Exceptions;
 using HyperMock.Setups;
 
 namespace HyperMock.Behaviors
@@ -12,7 +15,7 @@ namespace HyperMock.Behaviors
         {
             SetupInfo = setupInfo;
         }
-
+        
         internal SetupInfo SetupInfo { get; }
 
         /// <summary>
@@ -25,6 +28,26 @@ namespace HyperMock.Behaviors
         }
 
         /// <summary>
+        /// Sets the out params values to match the out params in the method. These must be in order and complete.
+        /// </summary>
+        /// <param name="args">List of args to set</param>
+        /// <returns>Self</returns>
+        public FunctionCall<TReturn> WithOutParams(params object[] args)
+        {
+            var outParams = SetupInfo.Parameters.Where(p => p.Type == ParameterType.Out).ToArray();
+
+            if (args.Length != outParams.Length)
+                throw new MockException("Out parameter mismatch. Too many or not enough args have been provided.");
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                outParams[i].Value = args[i];
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// The mocked type method or parameter throws an exception.
         /// </summary>
         /// <typeparam name="TException">Exception type</typeparam>
@@ -34,13 +57,13 @@ namespace HyperMock.Behaviors
         }
 
         /// <summary>
-        /// The mocked type function throws an exception.
+        /// The mocked type method or parameter throws an exception.
         /// </summary>
         /// <param name="exception">Exception instance to throw</param>
         public void Throws(Exception exception)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
-            
+
             SetupInfo.Exception = exception;
         }
     }

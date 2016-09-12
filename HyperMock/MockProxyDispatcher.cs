@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 #if !WINDOWS_UWP
 using System.Runtime.Remoting.Messaging;
@@ -47,6 +48,10 @@ namespace HyperMock
             }
             else
             {
+                var outParams = setupInfo.Parameters.Where(p => p.Type == ParameterType.Out);
+                var localOutArgs = outParams.Select(p => p.Value).ToArray();
+                Array.Copy(localOutArgs, 0, args, args.Length - localOutArgs.Length, localOutArgs.Length);
+
                 return setupInfo.Value;
             }
             
@@ -76,11 +81,12 @@ namespace HyperMock
             if (methodCall == null)
                 throw new NotSupportedException($"Proxy invoke called with an unsupported message: {msg}");
 
-            Visits.Record(methodCall.MethodBase, methodCall.Args);
+            Visits.Record(methodCall.MethodBase, methodCall.InArgs);
 
-            var setupInfo = Setups.FindBy(methodCall.MethodName, methodCall.Args);
+            var setupInfo = Setups.FindBy(methodCall.MethodName, methodCall.InArgs);
 
             object returnInstance = null;
+            object[] outArgs = methodCall.Args;
 
             if (setupInfo == null)
             {
@@ -98,9 +104,18 @@ namespace HyperMock
             else
             {
                 returnInstance = setupInfo.Value;
+                
+                var outParams = setupInfo.Parameters.Where(p => p.Type == ParameterType.Out);
+                var localOutArgs = outParams.Select(p => p.Value).ToArray();
+                Array.Copy(localOutArgs, 0, outArgs, outArgs.Length - localOutArgs.Length, localOutArgs.Length);
             }
 
-            return new ReturnMessage(returnInstance, null, 0, null, methodCall);
+            return new ReturnMessage(
+                returnInstance, 
+                outArgs, 
+                outArgs?.Length ?? 0, 
+                methodCall.LogicalCallContext, 
+                methodCall);
         }
     }
 #endif

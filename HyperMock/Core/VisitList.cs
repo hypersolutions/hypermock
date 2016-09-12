@@ -20,7 +20,8 @@ namespace HyperMock.Core
         {
             var parameters = _parameterList.BuildFrom(method, args);
 
-            var visit = RecordedVisits.FirstOrDefault(v => v.Name == method.Name && IsMatchFor(v.Parameters, parameters));
+            var visit = RecordedVisits.FirstOrDefault(
+                v => v.Name == method.Name && IsMatchFor(v.Parameters, parameters));
 
             if (visit != null)
             {

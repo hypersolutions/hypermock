@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupIndexerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetPropertyTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupOutArgumentTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupSetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\VerifyFunctionTests.cs" />
@@ -39,7 +40,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\ConverterService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\IAccountService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\IConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\IThermostatService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\NonSupportedAbstractClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\StatementInfo.cs" />
