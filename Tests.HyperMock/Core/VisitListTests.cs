@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using HyperMock;
 using HyperMock.Core;
 #if WINDOWS_UWP
@@ -24,7 +25,9 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordInsertsFirstTimeCallWithNoArgs()
         {
-            var visit = _visits.Record("Save", null);
+            var method = GetMethod("Save");
+
+            var visit = _visits.Record(method, null);
 
             Assert.AreEqual(1, visit.VisitCount);
         }
@@ -32,9 +35,10 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordUpdatesRepeatCallWithNoArgs()
         {
-            _visits.Record("Save", null);
+            var method = GetMethod("Save");
+            _visits.Record(method, null);
 
-            var visit = _visits.Record("Save", null);
+            var visit = _visits.Record(method, null);
 
             Assert.AreEqual(2, visit.VisitCount);
         }
@@ -42,9 +46,10 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordInsertsCallWithMismatchingArgs()
         {
-            _visits.Record("Save", new object[] { 10 });
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[] { 10 });
 
-            var visit = _visits.Record("Save", new object[] { 20 });
+            var visit = _visits.Record(method, new object[] { 20 });
 
             Assert.AreEqual(1, visit.VisitCount);
         }
@@ -52,9 +57,10 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordInsertsCallWithNullMismatchingArgs()
         {
-            _visits.Record("Save", new object[] { 10 });
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[] { 10 });
 
-            var visit = _visits.Record("Save", null);
+            var visit = _visits.Record(method, null);
 
             Assert.AreEqual(1, visit.VisitCount);
         }
@@ -62,9 +68,10 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordInsertsRepeatCallWithSingleArg()
         {
-            _visits.Record("Save", new object[]{10});
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[]{10});
 
-            var visit = _visits.Record("Save", new object[] {10});
+            var visit = _visits.Record(method, new object[] {10});
 
             Assert.AreEqual(2, visit.VisitCount);
         }
@@ -72,9 +79,10 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void RecordInsertsRepeatCallWithMultipleArgs()
         {
-            _visits.Record("Save", new object[] { 10, "Homer" });
+            var method = GetMethod("Save2");
+            _visits.Record(method, new object[] { 10, "Homer" });
 
-            var visit = _visits.Record("Save", new object[] { 10, "Homer" });
+            var visit = _visits.Record(method, new object[] { 10, "Homer" });
 
             Assert.AreEqual(2, visit.VisitCount);
         }
@@ -82,7 +90,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsMethodVisitForExactMatch()
         {
-            _visits.Record("Save", new object[] { 10 });
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(10);
 
             var visit = _visits.FindBy(expression, CallType.Method);
@@ -93,7 +102,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsNullMethodVisitForArgsMismatch()
         {
-            _visits.Record("Save", new object[] { 10 });
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(20);
 
             var visit = _visits.FindBy(expression, CallType.Method);
@@ -104,7 +114,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsMethodVisitWithAnyArgsMatch()
         {
-            _visits.Record("Save", new object[] { 10 });
+            var method = GetMethod("Save");
+            _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(Param.IsAny<int>());
 
             var visit = _visits.FindBy(expression, CallType.Method);
@@ -115,7 +126,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsFunctionVisitForExactMatch()
         {
-            _visits.Record("Load", new object[] { "Homer" });
+            var method = GetMethod("Load");
+            _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load("Homer");
 
             var visit = _visits.FindBy(expression, CallType.Function);
@@ -126,7 +138,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsNullFunctionVisitForArgsMismatch()
         {
-            _visits.Record("Load", new object[] { "Homer" });
+            var method = GetMethod("Load");
+            _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load("Marge");
 
             var visit = _visits.FindBy(expression, CallType.Function);
@@ -137,7 +150,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsFunctionVisitWithAnyArgsMatch()
         {
-            _visits.Record("Load", new object[] { "Homer" });
+            var method = GetMethod("Load");
+            _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load(Param.IsAny<string>());
 
             var visit = _visits.FindBy(expression, CallType.Function);
@@ -148,7 +162,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsGetPropertyVisit()
         {
-            _visits.Record("get_Age", new object[0]);
+            var method = GetMethod("get_Age");
+            _visits.Record(method, new object[0]);
             Expression<Func<int>> expression = () => Age;
 
             var visit = _visits.FindBy(expression, CallType.GetProperty);
@@ -159,7 +174,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsNullGetPropertyVisit()
         {
-            _visits.Record("get_Age", new object[0]);
+            var method = GetMethod("get_Age");
+            _visits.Record(method, new object[0]);
             Expression<Func<string>> expression = () => Gender;
 
             var visit = _visits.FindBy(expression, CallType.GetProperty);
@@ -170,7 +186,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsSetPropertyVisit()
         {
-            _visits.Record("set_Age", new object[] {30});
+            var method = GetMethod("set_Age");
+            _visits.Record(method, new object[] {30});
             Expression<Func<int>> expression = () => Age;
 
             var visit = _visits.FindBy(expression, CallType.SetProperty);
@@ -181,7 +198,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsNullSetPropertyVisit()
         {
-            _visits.Record("set_Age", new object[0]);
+            var method = GetMethod("set_Age");
+            _visits.Record(method, new object[0]);
             Expression<Func<string>> expression = () => Gender;
 
             var visit = _visits.FindBy(expression, CallType.SetProperty);
@@ -192,7 +210,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsGetIndexerPropertyVisit()
         {
-            _visits.Record("get_Item", new object[] {"Homer"});
+            var method = GetMethod("get_Item");
+            _visits.Record(method, new object[] {"Homer"});
             Expression<Func<int>> expression = () => this["Homer"];
 
             var visit = _visits.FindBy(expression, CallType.GetProperty);
@@ -203,7 +222,8 @@ namespace Tests.HyperMock.Core
         [TestMethod]
         public void FindByReturnsSetIndexerPropertyVisit()
         {
-            _visits.Record("set_Item", new object[] { "Homer" });
+            var method = GetMethod("set_Item");
+            _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => this["Homer"];
 
             var visit = _visits.FindBy(expression, CallType.SetProperty, new object[] {"Homer"});
@@ -228,10 +248,21 @@ namespace Tests.HyperMock.Core
             System.Diagnostics.Debug.WriteLine(x);
         }
 
+        // ReSharper disable once UnusedMember.Local
+        private void Save2(int x, string text)
+        {
+            System.Diagnostics.Debug.WriteLine(text + x);
+        }
+
         private int Load(string name)
         {
             System.Diagnostics.Debug.WriteLine(name);
             return 0;
+        }
+
+        private MethodBase GetMethod(string name)
+        {
+            return GetType().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Instance);
         }
     }
 }

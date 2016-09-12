@@ -42,9 +42,9 @@ namespace Tests.HyperMock
             mock.Object.Credit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(2, visit.Args.Length);
-            Assert.AreEqual("12345678", visit.Args[0]);
-            Assert.AreEqual(100, visit.Args[1]);
+            Assert.AreEqual(2, visit.Parameters.Length);
+            Assert.AreEqual("12345678", visit.Parameters[0].Value);
+            Assert.AreEqual(100, visit.Parameters[1].Value);
         }
 
         [TestMethod]
@@ -77,9 +77,9 @@ namespace Tests.HyperMock
             mock.Object.CanDebit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(2, visit.Args.Length);
-            Assert.AreEqual("12345678", visit.Args[0]);
-            Assert.AreEqual(100, visit.Args[1]);
+            Assert.AreEqual(2, visit.Parameters.Length);
+            Assert.AreEqual("12345678", visit.Parameters[0].Value);
+            Assert.AreEqual(100, visit.Parameters[1].Value);
         }
 
         [TestMethod]
@@ -136,8 +136,8 @@ namespace Tests.HyperMock
             mock.Object.HasAccounts = true;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(1, visit.Args.Length);
-            Assert.AreEqual(true, visit.Args[0]);
+            Assert.AreEqual(1, visit.Parameters.Length);
+            Assert.AreEqual(true, visit.Parameters[0].Value);
         }
     }
 }

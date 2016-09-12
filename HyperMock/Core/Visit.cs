@@ -2,15 +2,15 @@
 {
     internal class Visit
     {
-        internal Visit(string name, object[] args)
+        internal Visit(string name, Parameter[] parameters)
         {
             Name = name;
-            Args = args;
+            Parameters = parameters;
             VisitCount = 1;
         }
 
         internal string Name { get; }
-        internal object[] Args { get; }
+        internal Parameter[] Parameters { get; }
         internal int VisitCount { get; set; }
     }
 }

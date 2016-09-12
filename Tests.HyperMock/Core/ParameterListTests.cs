@@ -319,7 +319,18 @@ namespace Tests.HyperMock.Core
             Assert.AreEqual(ParameterType.In, parameters[0].Type);
             Assert.AreEqual(ParameterType.In, parameters[1].Type);
         }
-        
+
+        [TestMethod]
+        public void BuildFromReturnsParameterExactMatcherForMethodArgs()
+        {
+            var method = GetMethod("TestMethod2");
+
+            var parameters = _parameterList.BuildFrom(method, 10, 20);
+
+            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+        }
+
         [TestMethod]
         public void BuildFromReturnsParameterOutTypeForMethodArgs()
         {
@@ -353,7 +364,7 @@ namespace Tests.HyperMock.Core
 
         private void TestMethod3(ref string text)
         {
-            
+            System.Diagnostics.Debug.WriteLine(text);
         }
 
         private int TestFunction()

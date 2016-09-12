@@ -7,6 +7,8 @@ namespace HyperMock.Core
 {
     internal class VisitList
     {
+        private readonly ParameterList _parameterList = new ParameterList();
+
         internal VisitList()
         {
             RecordedVisits = new List<Visit>();
@@ -14,9 +16,11 @@ namespace HyperMock.Core
 
         internal List<Visit> RecordedVisits { get; }
 
-        internal Visit Record(string name, object[] args)
+        internal Visit Record(MethodBase method, object[] args)
         {
-            var visit = RecordedVisits.FirstOrDefault(v => v.Name == name && IsMatchFor(v.Args, args));
+            var parameters = _parameterList.BuildFrom(method, args);
+
+            var visit = RecordedVisits.FirstOrDefault(v => v.Name == method.Name && IsMatchFor(v.Parameters, parameters));
 
             if (visit != null)
             {
@@ -24,7 +28,7 @@ namespace HyperMock.Core
             }
             else
             {
-                visit = new Visit(name, args);
+                visit = new Visit(method.Name, parameters);
                 RecordedVisits.Add(visit);
             }
 
@@ -46,7 +50,7 @@ namespace HyperMock.Core
 
             return null;
         }
-        
+
         private Visit FindMethodVisit(LambdaExpression expression)
         {
             var body = expression.Body as MethodCallExpression;
@@ -60,7 +64,8 @@ namespace HyperMock.Core
             var parameterList = new ParameterList();
             var parameters = parameterList.BuildFrom(body, expression);
 
-            return matchingVisitationsByName.FirstOrDefault(v => parameterList.IsMatchFor(parameters, v.Args));
+            return matchingVisitationsByName.FirstOrDefault(
+                v => parameterList.IsMatchFor(parameters, v.Parameters.Select(p => p.Value).ToArray()));
         }
 
         private Visit FindGetPropertyVisit(LambdaExpression expression, object[] values = null)
@@ -81,8 +86,12 @@ namespace HyperMock.Core
 
             if (getMethodInfo == null) return null;
 
+            var parameterList = new ParameterList();
+            var parameters = parameterList.BuildFrom(getMethodInfo, values);
+
             if (values != null && values.Length > 0)
-                return RecordedVisits.FirstOrDefault(v => v.Name == getMethodInfo.Name && IsMatchFor(values, v.Args));
+                return RecordedVisits.FirstOrDefault(
+                    v => v.Name == getMethodInfo.Name && IsMatchFor(v.Parameters, parameters));
 
             return RecordedVisits.FirstOrDefault(v => v.Name == getMethodInfo.Name);
         }
@@ -105,16 +114,20 @@ namespace HyperMock.Core
 
             if (setMethodInfo == null) return null;
 
+            var parameterList = new ParameterList();
+            var parameters = parameterList.BuildFrom(setMethodInfo, values);
+
             // Special case! The way the mock is setup means that for sets the method may come through as a get!
             var name = setMethodInfo.Name.Replace("get_Item", "set_Item");
 
             if (values != null && values.Length > 0)
-                return RecordedVisits.FirstOrDefault(v => v.Name == name && IsMatchFor(values, v.Args));
+                return RecordedVisits.FirstOrDefault(
+                    v => v.Name == name && IsMatchFor(v.Parameters, parameters));
 
             return RecordedVisits.FirstOrDefault(v => v.Name == name);
         }
 
-        private static bool IsMatchFor(object[] args, object[] otherArgs)
+        private static bool IsMatchFor(Parameter[] args, Parameter[] otherArgs)
         {
             if (args == null && otherArgs == null) return true;
             if (args == null || otherArgs == null) return false;
@@ -122,7 +135,8 @@ namespace HyperMock.Core
 
             for (var i = 0; i < args.Length; i++)
             {
-                if (!Equals(args[i], otherArgs[i])) return false;
+                if (!args[i].Matcher.IsMatch(args[i].Value, otherArgs[i].Value)) return false;
+                //if (!Equals(args[i], otherArgs[i])) return false;
             }
 
             return true;

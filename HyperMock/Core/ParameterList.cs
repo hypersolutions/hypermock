@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -61,18 +60,23 @@ namespace HyperMock.Core
         internal Parameter[] BuildFrom(MethodBase method, params object[] args)
         {
             var parameters = new List<Parameter>();
-            var methodParameters = method.GetParameters();
 
-            for (var i = 0; i < args.Length; i++)
+            if (args != null && args.Length > 0)
             {
-                var value = args[i];
-                var paramInfo = methodParameters[i];
+                var methodParameters = method.GetParameters();
 
-                parameters.Add(new Parameter
+                for (var i = 0; i < args.Length; i++)
                 {
-                    Value = value,
-                    Type = GetParameterType(paramInfo)
-                });
+                    var value = args[i];
+                    var paramInfo = methodParameters[i];
+
+                    parameters.Add(new Parameter
+                    {
+                        Value = value,
+                        Type = GetParameterType(paramInfo),
+                        Matcher = new ExactParameterMatcher()
+                    });
+                }
             }
 
             return parameters.ToArray();

@@ -27,7 +27,7 @@ namespace HyperMock
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            Visits.Record(targetMethod.Name, args);
+            Visits.Record(targetMethod, args);
 
             var setupInfo = Setups.FindBy(targetMethod.Name, args);
 
@@ -76,7 +76,7 @@ namespace HyperMock
             if (methodCall == null)
                 throw new NotSupportedException($"Proxy invoke called with an unsupported message: {msg}");
 
-            Visits.Record(methodCall.MethodName, methodCall.Args);
+            Visits.Record(methodCall.MethodBase, methodCall.Args);
 
             var setupInfo = Setups.FindBy(methodCall.MethodName, methodCall.Args);
 
