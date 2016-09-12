@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
-#if WINDOWS_UWP
-using System.Reflection;
-#else
+#if !WINDOWS_UWP
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 #endif

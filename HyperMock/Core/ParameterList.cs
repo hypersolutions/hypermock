@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-#if WINDOWS_UWP
 using System.Reflection;
-#endif
 using HyperMock.Matchers;
 
 namespace HyperMock.Core
@@ -35,18 +34,56 @@ namespace HyperMock.Core
 
             if (body != null)
             {
-                foreach (var argument in body.Arguments)
+                var methodParameters = body.Method.GetParameters();
+
+                for (var i = 0; i < body.Arguments.Count; i++)
                 {
+                    var argument = body.Arguments[i];
+                    var paramInfo = methodParameters[i];
+
                     var lambda = Expression.Lambda(argument, expression.Parameters);
                     var compiledDelegate = lambda.Compile();
                     var value = lambda.Parameters.Count == 0
                         ? compiledDelegate.DynamicInvoke()
                         : compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter {Value = value, Matcher = _matcherFactory.Create(lambda)});
+                    parameters.Add(new Parameter
+                    {
+                        Value = value,
+                        Type = GetParameterType(paramInfo),
+                        Matcher = _matcherFactory.Create(lambda)
+                    });
                 }
             }
 
             return parameters.ToArray();
+        }
+
+        internal Parameter[] BuildFrom(MethodBase method, params object[] args)
+        {
+            var parameters = new List<Parameter>();
+            var methodParameters = method.GetParameters();
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                var value = args[i];
+                var paramInfo = methodParameters[i];
+
+                parameters.Add(new Parameter
+                {
+                    Value = value,
+                    Type = GetParameterType(paramInfo)
+                });
+            }
+
+            return parameters.ToArray();
+        }
+
+        private static ParameterType GetParameterType(ParameterInfo paramInfo)
+        {
+            if (paramInfo.IsOut) return ParameterType.Out;
+            if (paramInfo.ParameterType.IsByRef) return ParameterType.Ref;
+
+            return ParameterType.In;
         }
     }
 }
