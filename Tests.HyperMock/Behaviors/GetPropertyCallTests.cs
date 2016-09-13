@@ -45,5 +45,15 @@ namespace Tests.HyperMock.Behaviors
 
             Assert.AreEqual(returnValue, _getPropertyCall.SetupInfo.Value);
         }
+
+        [TestMethod]
+        public void ReturnsAttachesDeferredFuncToSetup()
+        {
+            var returnValue = 0;
+
+            _getPropertyCall.Returns(() => returnValue);
+
+            Assert.IsInstanceOfType(_getPropertyCall.SetupInfo.Value, typeof(Func<int>));
+        }
     }
 }

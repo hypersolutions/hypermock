@@ -197,5 +197,19 @@ namespace Tests.HyperMock.Integration
             Assert.AreEqual(info.Number, statement.Account);
             Assert.AreEqual("Statement", statement.Data);
         }
+
+        [TestMethod]
+        public void SetupReturnsDeferredValue()
+        {
+            var canDebit = false;
+            var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
+            // ReSharper disable once AccessToModifiedClosure
+            MockFor<IAccountService>().Setup(s => s.CanDebit(info.Number, info.DebitAmount)).Returns(() => canDebit);
+
+            canDebit = true;
+            Subject.Debit(info);
+
+            MockFor<IAccountService>().Verify(s => s.Debit(info.Number, info.DebitAmount), Occurred.Once());
+        }
     }
 }

@@ -49,6 +49,16 @@ namespace Tests.HyperMock.Behaviors
         }
 
         [TestMethod]
+        public void ReturnsAttachesDeferredFuncToSetup()
+        {
+            var returnValue = 0;
+
+            _functionCall.Returns(() => returnValue);
+
+            Assert.IsInstanceOfType(_functionCall.SetupInfo.Value, typeof(Func<int>));
+        }
+
+        [TestMethod]
         public void WithOutArgsReturnsSelf()
         {
             _functionCall.SetupInfo.Parameters = new[]

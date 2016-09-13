@@ -25,6 +25,15 @@ namespace HyperMock.Behaviors
         }
 
         /// <summary>
+        /// The mocked get property returns the resolved value at the point in which it is called.
+        /// </summary>
+        /// <param name="func">Func to call</param>
+        public void Returns(Func<TReturn> func)
+        {
+            SetupInfo.Value = func;
+        }
+
+        /// <summary>
         /// The mocked type method or parameter throws an exception.
         /// </summary>
         /// <typeparam name="TException">Exception type</typeparam>

@@ -54,7 +54,9 @@ namespace HyperMock.Core
 
         private static void BuildSetupResponse(SetupInfo setupInfo, DispatcherResponse response)
         {
-            response.ReturnValue = setupInfo.Value;
+            dynamic value = setupInfo.Value;
+
+            response.ReturnValue = IsDeferredFunc(value) ? value() : setupInfo.Value;
 
             var outAndRefParams = setupInfo.Parameters.Where(
                 p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
@@ -64,6 +66,16 @@ namespace HyperMock.Core
                 var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
                 response.ReturnArgs[index] = outAndRefParam.Value;
             }
+        }
+
+        public static bool IsDeferredFunc(dynamic value)
+        {
+            if (value == null) return false;
+
+            Type valueType = value.GetType();
+
+            return valueType.GetTypeInfo().IsGenericType &&
+                   valueType.GetTypeInfo().GetGenericTypeDefinition() == typeof(Func<>);
         }
     }
 }
