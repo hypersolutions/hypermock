@@ -31,5 +31,18 @@ namespace Tests.HyperMock.Integration
 
             Assert.AreEqual("321", result);
         }
+
+        [TestMethod]
+        public void InsertSpaceReturnsStringWithSpaceBetweenOutAndRefArgs()
+        {
+            string text = null;
+            int value;
+            MockFor<IConverter>().Setup(c => c.TryParse(ref text, out value))
+                .WithOutArgs(123).WithRefArgs("321").Returns(true);
+
+            var result = Subject.InsertSpace("123");
+
+            Assert.AreEqual("321 123", result);
+        }
     }
 }

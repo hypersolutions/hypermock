@@ -16,6 +16,20 @@ namespace Tests.HyperMock.Support
             return _converter.TryParse(text, out value) ? value : -1;
         }
 
+        public string InsertSpace(string text)
+        {
+            // Bit of a hack to test ref and out params together!
+
+            int value;
+
+            if (_converter.TryParse(ref text, out value))
+            {
+                return text + " " + value;
+            }
+
+            return null;
+        }
+
         public string FormatText(string text)
         {
             _converter.Format(ref text);
