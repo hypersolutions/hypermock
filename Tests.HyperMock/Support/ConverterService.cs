@@ -15,5 +15,11 @@ namespace Tests.HyperMock.Support
 
             return _converter.TryParse(text, out value) ? value : -1;
         }
+
+        public string FormatText(string text)
+        {
+            _converter.Format(ref text);
+            return text;
+        }
     }
 }

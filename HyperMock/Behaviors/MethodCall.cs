@@ -19,11 +19,11 @@ namespace HyperMock.Behaviors
         internal SetupInfo SetupInfo { get; }
 
         /// <summary>
-        /// Sets the out params values to match the out params in the method. These must be in order and complete.
+        /// Sets the out arg values to match the out params in the method. These must be in order and complete.
         /// </summary>
         /// <param name="args">List of args to set</param>
         /// <returns>Self</returns>
-        public MethodCall WithOutParams(params object[] args)
+        public MethodCall WithOutArgs(params object[] args)
         {
             var outParams = SetupInfo.Parameters.Where(p => p.Type == ParameterType.Out).ToArray();
 
@@ -33,6 +33,26 @@ namespace HyperMock.Behaviors
             for (var i = 0; i < args.Length; i++)
             {
                 outParams[i].Value = args[i];
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the out arg values to match the out params in the method. These must be in order and complete.
+        /// </summary>
+        /// <param name="args">List of args to set</param>
+        /// <returns>Self</returns>
+        public MethodCall WithRefArgs(params object[] args)
+        {
+            var refParams = SetupInfo.Parameters.Where(p => p.Type == ParameterType.Ref).ToArray();
+
+            if (args.Length != refParams.Length)
+                throw new MockException("Ref parameter mismatch. Too many or not enough args have been provided.");
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                refParams[i].Value = args[i];
             }
 
             return this;

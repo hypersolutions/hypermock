@@ -35,15 +35,23 @@ namespace HyperMock.Setups
 
             foreach (var setupInfo in _setupInfoList.Where(d => d.Name == name))
             {
-                var parameters = setupInfo.Parameters.Where(p => p.Type == ParameterType.In);
+                // Find all the in params to match against
+                var parameters = setupInfo
+                    .Parameters
+                    .Where(p => p.Type == ParameterType.In)
+                    .ToArray();
                 
+                // No args and params - must be a match
                 if (!parameters.Any() && (args?.Length ?? 0) == 0) return setupInfo;
-                if (args?.Length < parameters.Count()) return null;
 
-                var inArgs = new object[parameters.Count()];
+                // Mismatch between args and params - we won't find a match
+                if (args?.Length < parameters.Length) return null;
+
+                // Copy the input args to an array based upon the number of actual input params
+                var inArgs = new object[parameters.Length];
                 Array.Copy(args, 0, inArgs, 0, inArgs.Length);
 
-                if (parameterList.IsMatchFor(parameters.ToArray(), inArgs))
+                if (parameterList.IsMatchFor(parameters, inArgs))
                     return setupInfo;
             }
 

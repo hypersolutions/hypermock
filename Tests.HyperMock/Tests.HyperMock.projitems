@@ -21,7 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupIndexerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetPropertyTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupOutArgumentTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupOutAndRefArgumentTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupSetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\VerifyFunctionTests.cs" />

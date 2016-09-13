@@ -48,9 +48,14 @@ namespace HyperMock
             }
             else
             {
-                var outParams = setupInfo.Parameters.Where(p => p.Type == ParameterType.Out);
-                var localOutArgs = outParams.Select(p => p.Value).ToArray();
-                Array.Copy(localOutArgs, 0, args, args.Length - localOutArgs.Length, localOutArgs.Length);
+                var outAndRefParams =
+                    setupInfo.Parameters.Where(p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
+
+                foreach (var outAndRefParam in outAndRefParams)
+                {
+                    var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
+                    args[index] = outAndRefParam.Value;
+                }
 
                 return setupInfo.Value;
             }
@@ -86,7 +91,7 @@ namespace HyperMock
             var setupInfo = Setups.FindBy(methodCall.MethodName, methodCall.InArgs);
 
             object returnInstance = null;
-            object[] outArgs = methodCall.Args;
+            var outArgs = methodCall.Args;
 
             if (setupInfo == null)
             {
@@ -104,10 +109,15 @@ namespace HyperMock
             else
             {
                 returnInstance = setupInfo.Value;
-                
-                var outParams = setupInfo.Parameters.Where(p => p.Type == ParameterType.Out);
-                var localOutArgs = outParams.Select(p => p.Value).ToArray();
-                Array.Copy(localOutArgs, 0, outArgs, outArgs.Length - localOutArgs.Length, localOutArgs.Length);
+
+                var outAndRefParams =
+                    setupInfo.Parameters.Where(p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
+
+                foreach (var outAndRefParam in outAndRefParams)
+                {
+                    var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
+                    outArgs[index] = outAndRefParam.Value;
+                }
             }
 
             return new ReturnMessage(

@@ -49,33 +49,33 @@ namespace Tests.HyperMock.Behaviors
         }
 
         [TestMethod]
-        public void WithOutParamsReturnsSelf()
+        public void WithOutArgsReturnsSelf()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Out}
             };
 
-            var self = _functionCall.WithOutParams(10);
+            var self = _functionCall.WithOutArgs(10);
 
             Assert.AreEqual(_functionCall, self);
         }
 
         [TestMethod]
-        public void WithOutParamsAttachesSingleValueToOutParameter()
+        public void WithOutArgsAttachesSingleValueToOutParameter()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutParams(10);
+            _functionCall.WithOutArgs(10);
 
             Assert.AreEqual(10, _functionCall.SetupInfo.Parameters[0].Value);
         }
 
         [TestMethod]
-        public void WithOutParamsAttachesSingleValueToCorrectOutParameter()
+        public void WithOutArgsAttachesSingleValueToCorrectOutParameter()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
@@ -83,14 +83,14 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutParams(10);
+            _functionCall.WithOutArgs(10);
 
             Assert.AreEqual(10, _functionCall.SetupInfo.Parameters[1].Value);
         }
 
 #if WINDOWS_UWP
         [TestMethod]
-        public void WithOutParamsThrowsExceptionForNoParameterProvided()
+        public void WithOutArgsThrowsExceptionForNoParameterProvided()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
@@ -98,11 +98,11 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
             
-            Assert.ThrowsException<MockException>(() => _functionCall.WithOutParams());
+            Assert.ThrowsException<MockException>(() => _functionCall.WithOutArgs());
         }
 
         [TestMethod]
-        public void WithOutParamsThrowsExceptionForMoreParametersProvided()
+        public void WithOutArgsThrowsExceptionForMoreParametersProvided()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
@@ -110,11 +110,11 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
 
-            Assert.ThrowsException<MockException>(() => _functionCall.WithOutParams(10, 20));
+            Assert.ThrowsException<MockException>(() => _functionCall.WithOutArgs(10, 20));
         }
 #else
         [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithOutParamsThrowsExceptionForNoParameterProvided()
+        public void WithOutArgsThrowsExceptionForNoParameterProvided()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
@@ -122,11 +122,11 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutParams();
+            _functionCall.WithOutArgs();
         }
 
         [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithOutParamsThrowsExceptionForMoreParametersProvided()
+        public void WithOutArgsThrowsExceptionForMoreParametersProvided()
         {
             _functionCall.SetupInfo.Parameters = new[]
             {
@@ -134,7 +134,97 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutParams(10, 20);
+            _functionCall.WithOutArgs(10, 20);
+        }
+#endif
+
+        [TestMethod]
+        public void WithRefArgsReturnsSelf()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            var self = _functionCall.WithRefArgs(10);
+
+            Assert.AreEqual(_functionCall, self);
+        }
+
+        [TestMethod]
+        public void WithRefArgsAttachesSingleValueToRefParameter()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            _functionCall.WithRefArgs(10);
+
+            Assert.AreEqual(10, _functionCall.SetupInfo.Parameters[0].Value);
+        }
+
+        [TestMethod]
+        public void WithRefArgsAttachesSingleValueToCorrectRefParameter()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.In},
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            _functionCall.WithRefArgs(10);
+
+            Assert.AreEqual(10, _functionCall.SetupInfo.Parameters[1].Value);
+        }
+
+#if WINDOWS_UWP
+        [TestMethod]
+        public void WithRefArgsThrowsExceptionForNoParameterProvided()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.In},
+                new Parameter {Type = ParameterType.Ref}
+            };
+            
+            Assert.ThrowsException<MockException>(() => _functionCall.WithRefArgs());
+        }
+
+        [TestMethod]
+        public void WithRefArgsThrowsExceptionForMoreParametersProvided()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.In},
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            Assert.ThrowsException<MockException>(() => _functionCall.WithRefArgs(10, 20));
+        }
+#else
+        [TestMethod, ExpectedException(typeof(MockException))]
+        public void WithRefArgsThrowsExceptionForNoParameterProvided()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.In},
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            _functionCall.WithRefArgs();
+        }
+
+        [TestMethod, ExpectedException(typeof(MockException))]
+        public void WithRefArgsThrowsExceptionForMoreParametersProvided()
+        {
+            _functionCall.SetupInfo.Parameters = new[]
+            {
+                new Parameter {Type = ParameterType.In},
+                new Parameter {Type = ParameterType.Ref}
+            };
+
+            _functionCall.WithRefArgs(10, 20);
         }
 #endif
     }
