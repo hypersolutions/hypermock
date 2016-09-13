@@ -18,7 +18,7 @@ namespace HyperMock
         /// </summary>
         /// <param name="obj">Proxy object</param>
         /// <param name="dispatcher">Dispatcher</param>
-        public Mock(object obj, MockProxyDispatcher dispatcher)
+        public Mock(object obj, IMockProxyDispatcher dispatcher)
         {
             Object = obj;
             Dispatcher = dispatcher;
@@ -29,7 +29,7 @@ namespace HyperMock
         /// </summary>
         public object Object { get; }
 
-        internal MockProxyDispatcher Dispatcher { get; }
+        internal IMockProxyDispatcher Dispatcher { get; }
 
         /// <summary>
         /// Creates a proxy from a template interface.

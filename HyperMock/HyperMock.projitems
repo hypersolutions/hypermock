@@ -14,6 +14,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MethodCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\SetPropertyCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CallType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\DispatcherResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\MockProxyDispatcherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CountOrMoreOccurred.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\EventDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ExactOccurred.cs" />
@@ -24,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParameterList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Visit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\VisitList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMockProxyDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\AnyParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ExactParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\ParameterMatcher.cs" />

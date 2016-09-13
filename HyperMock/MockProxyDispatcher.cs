@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
+#if WINDOWS_UWP
 using System.Reflection;
-#if !WINDOWS_UWP
+#else
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 #endif
@@ -14,70 +14,45 @@ namespace HyperMock
     /// <summary>
     /// Provides the interceptor for all calls and records and resolves behaviors for each call.
     /// </summary>
-    public class MockProxyDispatcher : DispatchProxy
+    public class MockProxyDispatcher : DispatchProxy, IMockProxyDispatcher
     {
+        private readonly MockProxyDispatcherHelper _helper;
+
         public MockProxyDispatcher()
         {
-            Visits = new VisitList();
-            Setups = new SetupInfoList();
+            _helper = new MockProxyDispatcherHelper(this);
         }
 
-        internal VisitList Visits { get; }
+        VisitList IMockProxyDispatcher.Visits { get; } = new VisitList();
 
-        internal SetupInfoList Setups { get; }
+        SetupInfoList IMockProxyDispatcher.Setups { get; } = new SetupInfoList();
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            Visits.Record(targetMethod, args);
+            var response = _helper.Handle(targetMethod, args, args);
 
-            var setupInfo = Setups.FindBy(targetMethod.Name, args);
+            if (response.Exception != null)
+                throw response.Exception;
 
-            if (setupInfo == null)
-            {
-                if (targetMethod.ReturnType == typeof(void))
-                    return null;
-
-                if (targetMethod.ReturnType.GetTypeInfo().IsValueType)
-                {
-                    return Activator.CreateInstance(targetMethod.ReturnType);
-                }
-            }
-            else if (setupInfo.Exception != null)
-            {
-                throw setupInfo.Exception;
-            }
-            else
-            {
-                var outAndRefParams =
-                    setupInfo.Parameters.Where(p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
-
-                foreach (var outAndRefParam in outAndRefParams)
-                {
-                    var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
-                    args[index] = outAndRefParam.Value;
-                }
-
-                return setupInfo.Value;
-            }
-            
-            return null;
+            return response.ReturnValue;
         }
     }
 #else
     /// <summary>
     /// Provides the interceptor for all calls and records and resolves behaviors for each call.
     /// </summary>
-    public class MockProxyDispatcher : RealProxy
+    public class MockProxyDispatcher : RealProxy, IMockProxyDispatcher
     {
+        private readonly MockProxyDispatcherHelper _helper;
+
         public MockProxyDispatcher(Type interfaceType) : base(interfaceType)
         {
-            Visits = new VisitList();
-            Setups = new SetupInfoList();
+            _helper = new MockProxyDispatcherHelper(this);
         }
 
-        internal VisitList Visits { get; }
+        VisitList IMockProxyDispatcher.Visits { get; } = new VisitList();
 
-        internal SetupInfoList Setups { get; }
+        SetupInfoList IMockProxyDispatcher.Setups { get; } = new SetupInfoList();
 
         public override IMessage Invoke(IMessage msg)
         {
@@ -86,47 +61,18 @@ namespace HyperMock
             if (methodCall == null)
                 throw new NotSupportedException($"Proxy invoke called with an unsupported message: {msg}");
 
-            Visits.Record(methodCall.MethodBase, methodCall.InArgs);
+            var response = _helper.Handle(methodCall.MethodBase, methodCall.InArgs, methodCall.Args);
 
-            var setupInfo = Setups.FindBy(methodCall.MethodName, methodCall.InArgs);
-
-            object returnInstance = null;
-            var outArgs = methodCall.Args;
-
-            if (setupInfo == null)
-            {
-                var methodInfo = (MethodInfo) methodCall.MethodBase;
-
-                if (methodInfo.ReturnType != typeof(void) && methodInfo.ReturnType.IsValueType)
-                {
-                    returnInstance = Activator.CreateInstance(methodInfo.ReturnType);
-                }
-            }
-            else if (setupInfo.Exception != null)
-            {
-                return new ReturnMessage(setupInfo.Exception, methodCall);
-            }
-            else
-            {
-                returnInstance = setupInfo.Value;
-
-                var outAndRefParams =
-                    setupInfo.Parameters.Where(p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
-
-                foreach (var outAndRefParam in outAndRefParams)
-                {
-                    var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
-                    outArgs[index] = outAndRefParam.Value;
-                }
-            }
+            if (response.Exception != null)
+                return new ReturnMessage(response.Exception, methodCall);
 
             return new ReturnMessage(
-                returnInstance, 
-                outArgs, 
-                outArgs?.Length ?? 0, 
-                methodCall.LogicalCallContext, 
+                response.ReturnValue,
+                response.ReturnArgs,
+                response.ReturnArgs?.Length ?? 0,
+                methodCall.LogicalCallContext,
                 methodCall);
         }
     }
-#endif
+#endif    
 }

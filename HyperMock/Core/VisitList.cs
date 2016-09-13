@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace HyperMock.Core
 {
-    internal class VisitList
+    public class VisitList
     {
         private readonly ParameterList _parameterList = new ParameterList();
 
@@ -136,8 +136,8 @@ namespace HyperMock.Core
 
             for (var i = 0; i < args.Length; i++)
             {
-                if (!args[i].Matcher.IsMatch(args[i].Value, otherArgs[i].Value)) return false;
-                //if (!Equals(args[i], otherArgs[i])) return false;
+                if (!args[i].Matcher.IsMatch(args[i].Value, otherArgs[i].Value))
+                    return false;
             }
 
             return true;

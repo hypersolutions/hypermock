@@ -7,7 +7,7 @@ using HyperMock.Core;
 
 namespace HyperMock.Setups
 {
-    internal sealed class SetupInfoList
+    public sealed class SetupInfoList
     {
         private readonly List<SetupInfo> _setupInfoList = new List<SetupInfo>();
 
