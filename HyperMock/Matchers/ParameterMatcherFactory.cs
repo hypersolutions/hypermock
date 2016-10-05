@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
-#if WINDOWS_UWP
-using System.Reflection;
-#endif
+using HyperMock.Core;
 
 namespace HyperMock.Matchers
 {
@@ -14,8 +11,8 @@ namespace HyperMock.Matchers
             var methodCall = expression.Body as MethodCallExpression;
 
             // Find the parameter matcher attribute (if exists)
-            var paramMatcherAttr = methodCall?.Method.GetCustomAttributes(
-                    typeof(ParameterMatcherAttribute), false).FirstOrDefault() as ParameterMatcherAttribute;
+            var methodCallHelper = new MethodCallHelper();
+            var paramMatcherAttr = methodCallHelper.GetCustomAttribute<ParameterMatcherAttribute>(methodCall);
 
             // If exists then create the matcher else return the exact matcher
             return paramMatcherAttr != null 

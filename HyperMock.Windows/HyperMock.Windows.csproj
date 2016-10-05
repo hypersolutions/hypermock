@@ -38,6 +38,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\MockHelper.cs" />
+    <Compile Include="Core\PredicateHelper.cs" />
+    <Compile Include="Core\MethodCallHelper.cs" />
+    <Compile Include="Core\TypeHelper.cs" />
+    <Compile Include="MockProxyDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="..\HyperMock\HyperMock.projitems" Label="Shared" />

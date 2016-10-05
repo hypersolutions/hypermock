@@ -107,6 +107,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\MethodCallHelper.cs" />
+    <Compile Include="Core\MockHelper.cs" />
+    <Compile Include="Core\PredicateHelper.cs" />
+    <Compile Include="Core\TypeHelper.cs" />
+    <Compile Include="MockProxyDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\HyperMock.Universal.rd.xml" />
   </ItemGroup>

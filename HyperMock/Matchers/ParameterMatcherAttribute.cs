@@ -1,7 +1,5 @@
 ﻿using System;
-#if WINDOWS_UWP
-using System.Reflection;
-#endif
+using HyperMock.Core;
 
 namespace HyperMock.Matchers
 {
@@ -10,14 +8,10 @@ namespace HyperMock.Matchers
     {
         internal ParameterMatcherAttribute(Type type)
         {
-#if WINDOWS_UWP
-            if (!typeof(ParameterMatcher).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
-#else
-            if (!typeof(ParameterMatcher).IsAssignableFrom(type))
-#endif
-            {
+            var typeHelper = new TypeHelper();
+
+            if (!typeHelper.IsAssignableFrom(typeof(ParameterMatcher), type))
                 throw new ArgumentException($"Type {type} is not derived from ParameterMatcher.");
-            }
 
             ParameterMatcherType = type;
         }

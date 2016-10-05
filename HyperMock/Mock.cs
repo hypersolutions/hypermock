@@ -2,9 +2,6 @@
 using System.Linq.Expressions;
 using HyperMock.Behaviors;
 using HyperMock.Core;
-#if WINDOWS_UWP
-using System.Reflection;
-#endif
 
 namespace HyperMock
 {
@@ -13,6 +10,9 @@ namespace HyperMock
     /// </summary>
     public class Mock
     {
+        private static readonly TypeHelper _typeHelper = new TypeHelper();
+        private static readonly MockHelper _mockHelper = new MockHelper();
+
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
@@ -40,13 +40,7 @@ namespace HyperMock
         {
             CheckInstanceType(typeof(T));
 
-#if WINDOWS_UWP
-            var dispatcher = DispatchProxy.Create<T, MockProxyDispatcher>();
-            return new Mock<T>(dispatcher, dispatcher as MockProxyDispatcher);
-#else
-            var dispatcher = new MockProxyDispatcher(typeof(T));
-            return new Mock<T>((T)dispatcher.GetTransparentProxy(), dispatcher);
-#endif
+            return _mockHelper.Create<T>();
         }
 
         /// <summary>
@@ -57,31 +51,13 @@ namespace HyperMock
         public static Mock Create(Type type)
         {
             CheckInstanceType(type);
-            
-#if WINDOWS_UWP
 
-            var generatorType = typeof(DispatchProxy).GetTypeInfo()
-                .Assembly.GetType("System.Reflection.DispatchProxyGenerator");
-            var method = generatorType.GetMethod("CreateProxyInstance", BindingFlags.NonPublic | BindingFlags.Static);
-            var dispatcher = (MockProxyDispatcher)method.Invoke(
-                null, new object[] { typeof(MockProxyDispatcher), type });
-
-            var constructedType = typeof(Mock<>).MakeGenericType(type);
-            return (Mock)Activator.CreateInstance(constructedType, dispatcher , dispatcher);
-#else
-            var dispatcher = new MockProxyDispatcher(type);
-            return new Mock(dispatcher.GetTransparentProxy(), dispatcher);
-#endif
+            return _mockHelper.Create(type);
         }
         
-        // ReSharper disable once UnusedParameter.Local
         private static void CheckInstanceType(Type instanceType)
         {
-#if WINDOWS_UWP
-            if (!instanceType.GetTypeInfo().IsInterface)
-#else
-            if (!instanceType.IsInterface)
-#endif
+            if (!_typeHelper.IsInterface(instanceType))
                 throw new NotSupportedException("Only interface types are supported for proxy generation.");
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using HyperMock.Core;
 using HyperMock.Exceptions;
 
 namespace HyperMock.Matchers
@@ -14,11 +15,8 @@ namespace HyperMock.Matchers
 
                 if (predicate == null) throw new InvalidOperationException("The predicate is undefined.");
 
-#if WINDOWS_UWP
-                return (bool)predicate((dynamic)actual);
-#else
-                return (bool)predicate.DynamicInvoke(actual);
-#endif
+                var predicateHelper = new PredicateHelper();
+                return predicateHelper.Invoke(predicate, actual);
             }
             catch (Exception error)
             {

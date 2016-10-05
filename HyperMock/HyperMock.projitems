@@ -14,6 +14,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MethodCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\SetPropertyCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CallType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\MethodCallHelperBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\MockHelperBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PredicateHelperBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\TypeHelperBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DispatcherResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\MockProxyDispatcherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CountOrMoreOccurred.cs" />
@@ -35,7 +39,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\PredicateParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\RegexParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mock.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MockProxyDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Occurred.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Param.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setups\SetupInfo.cs" />
