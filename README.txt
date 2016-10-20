@@ -4,11 +4,9 @@ HyperMock Project
 Overview
 --------
 
-The project makes use of the VS shared project to enable windows and universal shared code. Both the HyperMock.Windows
-and HyperMock.Universal are empty. These both reference the HyperMock shared project. 
+The project makes use of the VS shared project to enable windows and universal shared code. Both the HyperMock.Windows and HyperMock.Universal are empty. These both reference the HyperMock shared project. 
 
-The NuGet packages ate built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the
-parent directory. 
+The NuGet packages ate built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the parent directory. 
 
 
 Examples
@@ -28,9 +26,7 @@ I have tried NUnit but although it seems to work, both R# and Test Explorer do n
 
 To avoid frustration, the tests make use in a few places of #if blocks. The main place this occurrs is around exception testing.
 
-MSTest is not consistent in this area. One platform prefers Assert.ThrowsException<> and the other uses the ExpectedException attribute.
-
-Neither have a shared process.
+MSTest is not consistent in this area. One platform prefers Assert.ThrowsException<> and the other uses the ExpectedException attribute. Neither have a shared process.
 
 Also due to the inconsistences again, standard DataRow tests are supported by the less elegant:
 
