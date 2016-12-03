@@ -4,10 +4,9 @@ HyperMock Project
 Overview
 --------
 
-The project makes use of the VS shared project to enable windows and universal shared code. Both the HyperMock.Windows
-and HyperMock.Universal are empty. These both reference the HyperMock shared project. 
+The project makes use of the VS shared project to enable windows and universal shared code. Both the HyperMock.Windows and HyperMock.Universal are empty. These both reference the HyperMock shared project. 
 
-The NuGet packages ate built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the
+The NuGet packages are built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the
 parent directory. 
 
 
@@ -22,7 +21,7 @@ It contains a simple scenario where the subject under test has a dependency on a
 Tests
 -----
 
-The tests use MSTest. In each test there is a #if statement at the top tp load the correct version of MSTest for each platform.
+The tests use MSTest. In each test there is a #if statement at the top to load the correct version of MSTest for each platform.
 
 I have tried NUnit but although it seems to work, both R# and Test Explorer do not work consistently well (at time of writing).
 
