@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ExactOccurred.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParameterType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\MockException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\StrictMockViolationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\VerificationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Parameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParameterList.cs" />
@@ -39,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\PredicateParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\RegexParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MockBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Occurred.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Param.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setups\SetupInfo.cs" />

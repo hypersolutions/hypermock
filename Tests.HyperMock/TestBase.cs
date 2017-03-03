@@ -30,9 +30,9 @@ namespace Tests.HyperMock
 
             foreach (var ctorParam in ctor.GetParameters())
             {
-                var method = typeof(Mock).GetMethod("Create", new Type[] { });
+                var method = typeof(Mock).GetMethod("Create", new[] { typeof(MockBehavior) });
                 var generic = method.MakeGenericMethod(ctorParam.ParameterType);
-                var mock = (Mock)generic.Invoke(this, null);
+                var mock = (Mock)generic.Invoke(this, new object[]{ MockBehavior.Loose});
 
                 _mocks.Add(ctorParam.ParameterType, mock);
             }

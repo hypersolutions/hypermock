@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using HyperMock.Exceptions;
 using HyperMock.Setups;
 
 namespace HyperMock.Core
@@ -24,6 +25,9 @@ namespace HyperMock.Core
 
             if (setupInfo == null)
             {
+                if (_dispatcher.MockBehavior == MockBehavior.Strict)
+                    throw new StrictMockViolationException(method);
+
                 BuildDefaultResponse(method, response);
             }
             else if (setupInfo.Exception != null)

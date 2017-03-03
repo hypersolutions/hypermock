@@ -10,5 +10,6 @@ namespace HyperMock
     {
         VisitList Visits { get; }
         SetupInfoList Setups { get; }
+        MockBehavior MockBehavior { get; set; }
     }
 }

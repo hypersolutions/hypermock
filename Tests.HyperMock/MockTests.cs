@@ -18,13 +18,13 @@ namespace Tests.HyperMock
         [TestMethod]
         public void CreateGenericThrowsExceptionForAbstractClass()
         {
-            Assert.ThrowsException<NotSupportedException>(Mock.Create<NonSupportedAbstractClass>);
+            Assert.ThrowsException<NotSupportedException>(() => Mock.Create<NonSupportedAbstractClass>());
         }
 
         [TestMethod]
         public void CreateGenericThrowsExceptionForConcreteClass()
         {
-            Assert.ThrowsException<NotSupportedException>(Mock.Create<AccountService>);
+            Assert.ThrowsException<NotSupportedException>(() => Mock.Create<AccountService>());
         }
 
         [TestMethod]

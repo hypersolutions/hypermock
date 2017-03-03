@@ -23,6 +23,8 @@ namespace HyperMock
 
         SetupInfoList IMockProxyDispatcher.Setups { get; } = new SetupInfoList();
 
+        MockBehavior IMockProxyDispatcher.MockBehavior { get; set; }
+
         public override IMessage Invoke(IMessage msg)
         {
             var methodCall = msg as IMethodCallMessage;

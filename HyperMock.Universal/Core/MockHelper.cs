@@ -6,13 +6,13 @@ namespace HyperMock.Core
 {
     internal class MockHelper : MockHelperBase
     {
-        internal override Mock<T> Create<T>()
+        internal override Mock<T> Create<T>(MockBehavior behavior)
         {
             var dispatcher = DispatchProxy.Create<T, MockProxyDispatcher>();
-            return new Mock<T>(dispatcher, dispatcher as MockProxyDispatcher);
+            return new Mock<T>(dispatcher, dispatcher as MockProxyDispatcher, behavior);
         }
 
-        internal override Mock Create(Type type)
+        internal override Mock Create(Type type, MockBehavior behavior)
         {
             var generatorType = typeof(DispatchProxy).GetTypeInfo()
                 .Assembly.GetType("System.Reflection.DispatchProxyGenerator");
@@ -21,7 +21,7 @@ namespace HyperMock.Core
                 null, new object[] { typeof(MockProxyDispatcher), type });
 
             var constructedType = typeof(Mock<>).MakeGenericType(type);
-            return (Mock)Activator.CreateInstance(constructedType, dispatcher, dispatcher);
+            return (Mock)Activator.CreateInstance(constructedType, dispatcher, dispatcher, behavior);
         }
     }
 }

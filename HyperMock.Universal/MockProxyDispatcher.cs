@@ -21,6 +21,8 @@ namespace HyperMock
 
         SetupInfoList IMockProxyDispatcher.Setups { get; } = new SetupInfoList();
 
+        MockBehavior IMockProxyDispatcher.MockBehavior { get; set; }
+
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var response = _helper.Handle(targetMethod, args, args);

@@ -18,10 +18,12 @@ namespace HyperMock
         /// </summary>
         /// <param name="obj">Proxy object</param>
         /// <param name="dispatcher">Dispatcher</param>
-        public Mock(object obj, IMockProxyDispatcher dispatcher)
+        /// <param name="behavior">Mock behavior to apply</param>
+        public Mock(object obj, IMockProxyDispatcher dispatcher, MockBehavior behavior)
         {
             Object = obj;
             Dispatcher = dispatcher;
+            Dispatcher.MockBehavior = behavior;
         }
 
         /// <summary>
@@ -36,23 +38,24 @@ namespace HyperMock
         /// </summary>
         /// <typeparam name="T">Interface type</typeparam>
         /// <returns>Proxy instance</returns>
-        public static Mock<T> Create<T>()
+        public static Mock<T> Create<T>(MockBehavior behavior = MockBehavior.Loose)
         {
             CheckInstanceType(typeof(T));
 
-            return _mockHelper.Create<T>();
+            return _mockHelper.Create<T>(behavior);
         }
 
         /// <summary>
         /// Creates a proxy from a interface type.
         /// </summary>
         /// <param name="type">Interface type</param>
+        /// <param name="behavior">Mock behavior</param>
         /// <returns>Proxy instance</returns>
-        public static Mock Create(Type type)
+        public static Mock Create(Type type, MockBehavior behavior = MockBehavior.Loose)
         {
             CheckInstanceType(type);
 
-            return _mockHelper.Create(type);
+            return _mockHelper.Create(type, behavior);
         }
         
         private static void CheckInstanceType(Type instanceType)
@@ -75,7 +78,8 @@ namespace HyperMock
         /// </summary>
         /// <param name="obj">Proxy object</param>
         /// <param name="dispatcher">Dispatcher</param>
-        public Mock(T obj, MockProxyDispatcher dispatcher) : base(obj, dispatcher)
+        /// <param name="behavior">Mock behavior to apply</param>
+        public Mock(T obj, MockProxyDispatcher dispatcher, MockBehavior behavior) : base(obj, dispatcher, behavior)
         {
         }
 
