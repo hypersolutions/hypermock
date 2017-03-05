@@ -11,7 +11,7 @@
         Loose,
 
         /// <summary>
-        /// Making a call on a mock that has no setup defined will will raise an 
+        /// Making a call on a mock that has no setup defined raises a 
         /// <see cref="HyperMock.Exceptions.StrictMockViolationException"/>.
         /// </summary>
         Strict

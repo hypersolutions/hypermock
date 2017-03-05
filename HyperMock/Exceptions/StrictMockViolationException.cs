@@ -9,7 +9,7 @@ namespace HyperMock.Exceptions
     public sealed class StrictMockViolationException : Exception
     {
         private const string MessageTemplate = 
-            "There is no setup for the call '{0}. All calls using a strict mock must be defined.";
+            "There is no setup for the call '{0}'. All calls using a strict mock must be defined.";
 
         internal StrictMockViolationException(MethodBase method) : base(string.Format(MessageTemplate, method.Name))
         {

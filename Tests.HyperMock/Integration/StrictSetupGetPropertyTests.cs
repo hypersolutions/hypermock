@@ -1,4 +1,4 @@
-﻿using HyperMock;
+using HyperMock;
 using HyperMock.Exceptions;
 #if WINDOWS_UWP
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -10,27 +10,25 @@ using Tests.HyperMock.Support;
 namespace Tests.HyperMock.Integration
 {
     [TestClass]
-    public class StrictSetupMethodTests
+    public class StrictSetupGetPropertyTests
     {
 #if WINDOWS_UWP
         [TestMethod]
-        public void CallThrowsStrictMockViolationExceptionForUnsetupMockMethod()
+        public void CallThrowsStrictMockViolationExceptionForUnsetupMockGetProperty()
         {
             var accountServiceMock = Mock.Create<IAccountService>(MockBehavior.Strict);
-            var info = new AccountInfo { Number = "12345678", CreditAmount = 100 };
             var subject = new AccountController(accountServiceMock.Object);
 
-            Assert.ThrowsException<StrictMockViolationException>(() => subject.Credit(info));
+            Assert.ThrowsException<StrictMockViolationException>(() => subject.HasAccounts());
         }
 #else
         [TestMethod, ExpectedException(typeof(StrictMockViolationException))]
-        public void CallThrowsStrictMockViolationExceptionForUnsetupMockMethod()
+        public void CallThrowsStrictMockViolationExceptionForUnsetupMockGetProperty()
         {
             var accountServiceMock = Mock.Create<IAccountService>(MockBehavior.Strict);
-            var info = new AccountInfo { Number = "12345678", CreditAmount = 100 };
             var subject = new AccountController(accountServiceMock.Object);
 
-            subject.Credit(info);
+            subject.HasAccounts();
         }
 #endif
     }

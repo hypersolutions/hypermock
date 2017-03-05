@@ -18,9 +18,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParameterListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\VisitListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\RaiseEventTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupFunctionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupGetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupIndexerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupGetPropertyTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupSetPropertyTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupMethodTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupOutAndRefArgumentTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupMethodTests.cs" />
