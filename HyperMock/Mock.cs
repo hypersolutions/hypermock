@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using HyperMock.Behaviors;
 using HyperMock.Core;
@@ -145,9 +146,9 @@ namespace HyperMock
         /// <param name="occurred">Occurrence pattern to check</param>
         public void Verify(Expression<Action<T>> expression, Occurred occurred)
         {
-            var visit = Dispatcher.Visits.FindBy(expression, CallType.Method);
+            var visits = Dispatcher.Visits.FindBy(expression, CallType.Method);
 
-            var count = visit?.VisitCount ?? 0;
+            var count = visits.Sum(v => v.VisitCount);
 
             occurred.Assert(count);
         }
@@ -159,9 +160,9 @@ namespace HyperMock
         /// <param name="occurred">Occurrence pattern to check</param>
         public void Verify<TReturn>(Expression<Func<T, TReturn>> expression, Occurred occurred)
         {
-            var visit = Dispatcher.Visits.FindBy(expression, CallType.Function);
+            var visits = Dispatcher.Visits.FindBy(expression, CallType.Function);
 
-            var count = visit?.VisitCount ?? 0;
+            var count = visits.Sum(v => v.VisitCount);
 
             occurred.Assert(count);
         }
@@ -173,9 +174,9 @@ namespace HyperMock
         /// <param name="occurred">Occurrence pattern to check</param>
         public void VerifyGet<TReturn>(Expression<Func<T, TReturn>> expression, Occurred occurred)
         {
-            var visit = Dispatcher.Visits.FindBy(expression, CallType.GetProperty);
+            var visits = Dispatcher.Visits.FindBy(expression, CallType.GetProperty);
 
-            var count = visit?.VisitCount ?? 0;
+            var count = visits.Sum(v => v.VisitCount);
 
             occurred.Assert(count);
         }
@@ -187,9 +188,9 @@ namespace HyperMock
         /// <param name="occurred">Occurrence pattern to check</param>
         public void VerifySet<TValue>(Expression<Func<T, TValue>> expression, Occurred occurred)
         {
-            var visit = Dispatcher.Visits.FindBy(expression, CallType.SetProperty);
+            var visits = Dispatcher.Visits.FindBy(expression, CallType.SetProperty);
 
-            var count = visit?.VisitCount ?? 0;
+            var count = visits.Sum(v => v.VisitCount);
 
             occurred.Assert(count);
         }
@@ -202,9 +203,9 @@ namespace HyperMock
         /// <param name="occurred">Occurrence pattern to check</param>
         public void VerifySet<TValue>(Expression<Func<T, TValue>> expression, TValue propertyValue, Occurred occurred)
         {
-            var visit = Dispatcher.Visits.FindBy(expression, CallType.SetProperty, new object[] {propertyValue});
+            var visits = Dispatcher.Visits.FindBy(expression, CallType.SetProperty, new object[] {propertyValue});
 
-            var count = visit?.VisitCount ?? 0;
+            var count = visits.Sum(v => v.VisitCount);
 
             occurred.Assert(count);
         }

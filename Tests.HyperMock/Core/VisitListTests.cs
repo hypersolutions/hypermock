@@ -94,21 +94,21 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(10);
 
-            var visit = _visits.FindBy(expression, CallType.Method);
+            var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
-        public void FindByReturnsNullMethodVisitForArgsMismatch()
+        public void FindByReturnsEmptyMethodVisitForArgsMismatch()
         {
             var method = GetMethod("Save");
             _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(20);
 
-            var visit = _visits.FindBy(expression, CallType.Method);
+            var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.IsNull(visit);
+            Assert.AreEqual(0, visits.Length);
         }
 
         [TestMethod]
@@ -118,9 +118,9 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] { 10 });
             Expression<Action> expression = () => Save(Param.IsAny<int>());
 
-            var visit = _visits.FindBy(expression, CallType.Method);
+            var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
@@ -130,21 +130,21 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load("Homer");
 
-            var visit = _visits.FindBy(expression, CallType.Function);
+            var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
-        public void FindByReturnsNullFunctionVisitForArgsMismatch()
+        public void FindByReturnsEmptyFunctionVisitForArgsMismatch()
         {
             var method = GetMethod("Load");
             _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load("Marge");
 
-            var visit = _visits.FindBy(expression, CallType.Function);
+            var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.IsNull(visit);
+            Assert.AreEqual(0, visits.Length);
         }
 
         [TestMethod]
@@ -154,9 +154,9 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => Load(Param.IsAny<string>());
 
-            var visit = _visits.FindBy(expression, CallType.Function);
+            var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
@@ -166,21 +166,21 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[0]);
             Expression<Func<int>> expression = () => Age;
 
-            var visit = _visits.FindBy(expression, CallType.GetProperty);
+            var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
-        public void FindByReturnsNullGetPropertyVisit()
+        public void FindByReturnsEmptyGetPropertyVisit()
         {
             var method = GetMethod("get_Age");
             _visits.Record(method, new object[0]);
             Expression<Func<string>> expression = () => Gender;
 
-            var visit = _visits.FindBy(expression, CallType.GetProperty);
+            var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.IsNull(visit);
+            Assert.AreEqual(0, visits.Length);
         }
 
         [TestMethod]
@@ -190,21 +190,21 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] {30});
             Expression<Func<int>> expression = () => Age;
 
-            var visit = _visits.FindBy(expression, CallType.SetProperty);
+            var visits = _visits.FindBy(expression, CallType.SetProperty);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
-        public void FindByReturnsNullSetPropertyVisit()
+        public void FindByReturnsEmptySetPropertyVisit()
         {
             var method = GetMethod("set_Age");
             _visits.Record(method, new object[0]);
             Expression<Func<string>> expression = () => Gender;
 
-            var visit = _visits.FindBy(expression, CallType.SetProperty);
+            var visits = _visits.FindBy(expression, CallType.SetProperty);
 
-            Assert.IsNull(visit);
+            Assert.AreEqual(0, visits.Length);
         }
 
         [TestMethod]
@@ -214,9 +214,9 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] {"Homer"});
             Expression<Func<int>> expression = () => this["Homer"];
 
-            var visit = _visits.FindBy(expression, CallType.GetProperty);
+            var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         [TestMethod]
@@ -226,9 +226,9 @@ namespace Tests.HyperMock.Core
             _visits.Record(method, new object[] { "Homer" });
             Expression<Func<int>> expression = () => this["Homer"];
 
-            var visit = _visits.FindBy(expression, CallType.SetProperty, new object[] {"Homer"});
+            var visits = _visits.FindBy(expression, CallType.SetProperty, new object[] {"Homer"});
 
-            Assert.IsNotNull(visit);
+            Assert.AreEqual(1, visits.Length);
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local

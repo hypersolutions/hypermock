@@ -20,7 +20,7 @@ namespace HyperMock.Core
             var recordedVisits = _mock.Dispatcher.Visits.RecordedVisits;
 
             // Capture the empty handler record - this will give us the event name
-            var lastEventRecord = recordedVisits.Last();
+            var lastEventRecord = _mock.Dispatcher.Visits.LastVisit;
 
             // Find the event record (if exists) for the event with an attached handler
             var eventRecord = recordedVisits.FirstOrDefault(

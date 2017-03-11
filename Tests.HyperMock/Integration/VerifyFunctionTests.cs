@@ -61,6 +61,32 @@ namespace Tests.HyperMock.Integration
             }
         }
 
+        [TestMethod]
+        public void VerifyExactlyTwiceWithAnyParam()
+        {
+            var info1 = new AccountInfo { Number = "12345678", DebitAmount = 100 };
+            var info2 = new AccountInfo { Number = "87654321", DebitAmount = 200 };
+
+            Subject.Debit(info1);
+            Subject.Debit(info2);
+
+            MockFor<IAccountService>().Verify(s => s.CanDebit(
+                Param.IsAny<string>(), Param.IsAny<int>()), Occurred.Exactly(2));
+        }
+
+        [TestMethod]
+        public void VerifyExactlyOnceWithSeparateParams()
+        {
+            var info1 = new AccountInfo { Number = "12345678", DebitAmount = 100 };
+            var info2 = new AccountInfo { Number = "87654321", DebitAmount = 200 };
+
+            Subject.Debit(info1);
+            Subject.Debit(info2);
+
+            MockFor<IAccountService>().Verify(s => s.CanDebit(info1.Number, info1.DebitAmount), Occurred.Once());
+            MockFor<IAccountService>().Verify(s => s.CanDebit(info2.Number, info2.DebitAmount), Occurred.Once());
+        }
+
 #if WINDOWS_UWP
         [TestMethod]
         public void VerifyNeverThrowsException()
