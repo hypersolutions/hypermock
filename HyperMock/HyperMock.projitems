@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Matchers\RegexParameterMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MockCallGroupContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Occurred.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Param.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setups\SetupInfo.cs" />

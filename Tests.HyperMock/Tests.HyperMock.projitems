@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParameterListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\VisitListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\RaiseEventTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\ResetOccurenceTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupFunctionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\SetupFunctionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\StrictSetupGetPropertyTests.cs" />
@@ -44,14 +45,21 @@
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\AccountService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\AuthenticationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\ResponseTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\ConverterService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\DataServiceResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\ErrorModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\IAccountService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\IConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\IDataService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\IThermostatService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\NonSupportedAbstractClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\StatementInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\TempChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Support\ThermostatController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Support\UserModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestBase.cs" />
   </ItemGroup>
 </Project>

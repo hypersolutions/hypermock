@@ -231,6 +231,17 @@ namespace Tests.HyperMock.Core
             Assert.AreEqual(1, visits.Length);
         }
 
+        [TestMethod]
+        public void ResetCallsRemovesVisits()
+        {
+            var method = GetMethod("Save");
+            _visits.Record(method, null);
+
+            _visits.Reset();
+
+            Assert.AreEqual(0, _visits.RecordedVisits.Count);
+        }
+
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int Age { get; set; }
         // ReSharper disable once UnusedAutoPropertyAccessor.Local

@@ -56,6 +56,11 @@ namespace HyperMock.Core
             return new Visit[0];
         }
 
+        internal void Reset()
+        {
+            RecordedVisits.Clear();
+        }
+
         private Visit[] FindMethodVisits(LambdaExpression expression)
         {
             var body = expression.Body as MethodCallExpression;

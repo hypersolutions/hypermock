@@ -58,7 +58,18 @@ namespace HyperMock
 
             return _mockHelper.Create(type, behavior);
         }
-        
+
+        /// <summary>
+        /// Creates a group to ensure that all calls are reset when the group disposes inside a using block.
+        /// This provides support for situations whereby you require static mocks to be reused across tests and need 
+        /// visit metrics to be reset.
+        /// </summary>
+        /// <param name="mocks">List of mocks to reset</param>
+        public static MockCallGroupContainer CallGroup(params Mock[] mocks)
+        {
+            return new MockCallGroupContainer(mocks);
+        }
+
         private static void CheckInstanceType(Type instanceType)
         {
             if (!_typeHelper.IsInterface(instanceType))
