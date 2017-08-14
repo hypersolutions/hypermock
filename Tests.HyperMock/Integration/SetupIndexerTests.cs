@@ -1,17 +1,12 @@
 using System;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
     public class SetupIndexerTests : TestBase<AccountController>
     {
-        [TestMethod]
+        [Fact]
         public void SetupGetIndexerReturnsMatchingAccount()
         {
             MockFor<IAccountService>().SetupGet(
@@ -21,10 +16,10 @@ namespace Tests.HyperMock.Integration
 
             var accountInfo = Subject.GetAccount("12345678");
 
-            Assert.AreEqual("Acc1", accountInfo.Name);
+            Assert.Equal("Acc1", accountInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupSetIndexerUpdatesIndexerValue()
         {
             var account = new Account {Number = "12345678"};
@@ -32,29 +27,17 @@ namespace Tests.HyperMock.Integration
 
             Subject.UpdateAccount("12345678", "Acc1");
 
-            Assert.AreEqual("Acc1", account.Name);
+            Assert.Equal("Acc1", account.Name);
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void SetupSetIndexerThrowsException()
         {
             var account = new Account {Number = "12345678"};
             MockFor<IAccountService>().SetupGet(s => s["12345678"]).Returns(account);
             MockFor<IAccountService>().SetupSet(s => s["12345678"]).SetValue(account).Throws<InvalidOperationException>();
 
-            Assert.ThrowsException<InvalidOperationException>(() => Subject.UpdateAccount("12345678", "Acc1"));
+            Assert.Throws<InvalidOperationException>(() => Subject.UpdateAccount("12345678", "Acc1"));
         }
-#else
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void SetupSetIndexerThrowsException()
-        {
-            var account = new Account {Number = "12345678"};
-            MockFor<IAccountService>().SetupGet(s => s["12345678"]).Returns(account);
-            MockFor<IAccountService>().SetupSet(s => s["12345678"]).SetValue(account).Throws<InvalidOperationException>();
-
-            Subject.UpdateAccount("12345678", "Acc1");
-        }
-#endif
     }
 }

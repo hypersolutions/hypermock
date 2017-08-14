@@ -1,59 +1,54 @@
 using System;
 using HyperMock.Behaviors;
 using HyperMock.Setups;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Behaviors
 {
-    [TestClass]
     public class GetPropertyCallTests
     {
-        private GetPropertyCall<int> _getPropertyCall;
+        private readonly GetPropertyCall<int> _getPropertyCall;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public GetPropertyCallTests()
         {
             _getPropertyCall = new GetPropertyCall<int>(new SetupInfo());
         }
 
-        [TestMethod]
+        [Fact]
         public void ThrowsAttachesExceptionTypeToSetup()
         {
             _getPropertyCall.Throws<NotSupportedException>();
 
-            Assert.IsInstanceOfType(_getPropertyCall.SetupInfo.Exception, typeof(NotSupportedException));
+            Assert.IsType<NotSupportedException>(_getPropertyCall.SetupInfo.Exception);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThrowsAttachesExceptionInstanceToSetup()
         {
-            _getPropertyCall.Throws(new NotSupportedException());
+            var exception = new NotSupportedException();
+            _getPropertyCall.Throws(exception);
 
-            Assert.IsInstanceOfType(_getPropertyCall.SetupInfo.Exception, typeof(NotSupportedException));
+            Assert.Equal(exception, _getPropertyCall.SetupInfo.Exception);
         }
 
-        [TestMethod]
+        [Fact]
         public void ReturnsAttachesValueToSetup()
         {
             var returnValue = 10;
 
             _getPropertyCall.Returns(returnValue);
 
-            Assert.AreEqual(returnValue, _getPropertyCall.SetupInfo.Value);
+            Assert.Equal(returnValue, _getPropertyCall.SetupInfo.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void ReturnsAttachesDeferredFuncToSetup()
         {
             var returnValue = 0;
 
             _getPropertyCall.Returns(() => returnValue);
 
-            Assert.IsInstanceOfType(_getPropertyCall.SetupInfo.Value, typeof(Func<int>));
+            Assert.IsType<Func<int>>(_getPropertyCall.SetupInfo.Value);
         }
     }
 }

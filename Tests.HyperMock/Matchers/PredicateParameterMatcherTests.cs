@@ -1,41 +1,27 @@
 ﻿using System;
 using System.Linq.Expressions;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using HyperMock.Exceptions;
 using HyperMock.Matchers;
+using Xunit;
 
 namespace Tests.HyperMock.Matchers
 {
-    [TestClass]
     public class PredicateParameterMatcherTests
     {
-        private PredicateParameterMatcher _matcher;
+        private readonly PredicateParameterMatcher _matcher;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public PredicateParameterMatcherTests()
         {
             _matcher = new PredicateParameterMatcher();
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void IsMatchThrowsExceptionForInvalidCallContext()
         {
-            Assert.ThrowsException<MockException>(() => _matcher.IsMatch(null, null));
+            Assert.Throws<MockException>(() => _matcher.IsMatch(null, null));
         }
-#else
-        [TestMethod, ExpectedException(typeof(MockException))]
-        public void IsMatchThrowsExceptionForInvalidCallContext()
-        {
-            _matcher.IsMatch(null, null);
-        }
-#endif
 
-        [TestMethod]
+        [Fact]
         public void IsMatchReturnsTrueForMatchingSingleConditionOnActualValue()
         {
             Expression<Func<bool>> expression = () => TestFunction(p => p < 10);
@@ -43,10 +29,10 @@ namespace Tests.HyperMock.Matchers
 
             var isMatch = _matcher.IsMatch(null, 9);
 
-            Assert.IsTrue(isMatch);
+            Assert.True(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchReturnsFalseForMatchingSingleConditionOnActualValue()
         {
             Expression<Func<bool>> expression = () => TestFunction(p => p < 10);
@@ -54,39 +40,34 @@ namespace Tests.HyperMock.Matchers
 
             var isMatch = _matcher.IsMatch(null, 10);
 
-            Assert.IsFalse(isMatch);
+            Assert.False(isMatch);
         }
 
-        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
-        [TestMethod]
-        public void IsMatchReturnsTrueForMatchingMultipleConditionsOnActualValue()
+        [Theory]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        public void IsMatchReturnsTrueForMatchingMultipleConditionsOnActualValue(int value)
         {
-            var data = new[] {2, 3, 4};
             Expression<Func<bool>> expression = () => TestFunction(p => p > 1 && p < 5);
             _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            foreach (var value in data)
-            {
-                var isMatch = _matcher.IsMatch(null, value);
+            var isMatch = _matcher.IsMatch(null, value);
 
-                Assert.IsTrue(isMatch);
-            }
+            Assert.True(isMatch);
         }
 
-        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
-        [TestMethod]
-        public void IsMatchReturnsFalseForMatchingMultipleConditionsOnActualValue()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void IsMatchReturnsFalseForMatchingMultipleConditionsOnActualValue(int value)
         {
-            var data = new[] { 1, 5 };
             Expression<Func<bool>> expression = () => TestFunction(p => p > 1 && p < 5);
             _matcher.CallContext = expression.Body as MethodCallExpression;
 
-            foreach (var value in data)
-            {
-                var isMatch = _matcher.IsMatch(null, value);
+            var isMatch = _matcher.IsMatch(null, value);
 
-                Assert.IsFalse(isMatch);
-            }
+            Assert.False(isMatch);
         }
 
         private bool TestFunction(Func<int, bool> func)

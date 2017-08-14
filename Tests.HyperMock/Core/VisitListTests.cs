@@ -3,36 +3,30 @@ using System.Linq.Expressions;
 using System.Reflection;
 using HyperMock;
 using HyperMock.Core;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Core
 {
-    [TestClass]
     public class VisitListTests
     {
-        private VisitList _visits;
+        private readonly VisitList _visits;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public VisitListTests()
         {
             _visits = new VisitList();
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordInsertsFirstTimeCallWithNoArgs()
         {
             var method = GetMethod("Save");
 
             var visit = _visits.Record(method, null);
 
-            Assert.AreEqual(1, visit.VisitCount);
+            Assert.Equal(1, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordUpdatesRepeatCallWithNoArgs()
         {
             var method = GetMethod("Save");
@@ -40,10 +34,10 @@ namespace Tests.HyperMock.Core
 
             var visit = _visits.Record(method, null);
 
-            Assert.AreEqual(2, visit.VisitCount);
+            Assert.Equal(2, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordInsertsCallWithMismatchingArgs()
         {
             var method = GetMethod("Save");
@@ -51,10 +45,10 @@ namespace Tests.HyperMock.Core
 
             var visit = _visits.Record(method, new object[] { 20 });
 
-            Assert.AreEqual(1, visit.VisitCount);
+            Assert.Equal(1, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordInsertsCallWithNullMismatchingArgs()
         {
             var method = GetMethod("Save");
@@ -62,10 +56,10 @@ namespace Tests.HyperMock.Core
 
             var visit = _visits.Record(method, null);
 
-            Assert.AreEqual(1, visit.VisitCount);
+            Assert.Equal(1, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordInsertsRepeatCallWithSingleArg()
         {
             var method = GetMethod("Save");
@@ -73,10 +67,10 @@ namespace Tests.HyperMock.Core
 
             var visit = _visits.Record(method, new object[] {10});
 
-            Assert.AreEqual(2, visit.VisitCount);
+            Assert.Equal(2, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void RecordInsertsRepeatCallWithMultipleArgs()
         {
             var method = GetMethod("Save2");
@@ -84,10 +78,10 @@ namespace Tests.HyperMock.Core
 
             var visit = _visits.Record(method, new object[] { 10, "Homer" });
 
-            Assert.AreEqual(2, visit.VisitCount);
+            Assert.Equal(2, visit.VisitCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsMethodVisitForExactMatch()
         {
             var method = GetMethod("Save");
@@ -96,10 +90,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsEmptyMethodVisitForArgsMismatch()
         {
             var method = GetMethod("Save");
@@ -108,10 +102,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.AreEqual(0, visits.Length);
+            Assert.Equal(0, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsMethodVisitWithAnyArgsMatch()
         {
             var method = GetMethod("Save");
@@ -120,10 +114,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Method);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsFunctionVisitForExactMatch()
         {
             var method = GetMethod("Load");
@@ -132,10 +126,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsEmptyFunctionVisitForArgsMismatch()
         {
             var method = GetMethod("Load");
@@ -144,10 +138,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.AreEqual(0, visits.Length);
+            Assert.Equal(0, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsFunctionVisitWithAnyArgsMatch()
         {
             var method = GetMethod("Load");
@@ -156,10 +150,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.Function);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsGetPropertyVisit()
         {
             var method = GetMethod("get_Age");
@@ -168,10 +162,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsEmptyGetPropertyVisit()
         {
             var method = GetMethod("get_Age");
@@ -180,10 +174,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.AreEqual(0, visits.Length);
+            Assert.Equal(0, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsSetPropertyVisit()
         {
             var method = GetMethod("set_Age");
@@ -192,10 +186,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.SetProperty);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsEmptySetPropertyVisit()
         {
             var method = GetMethod("set_Age");
@@ -204,10 +198,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.SetProperty);
 
-            Assert.AreEqual(0, visits.Length);
+            Assert.Equal(0, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsGetIndexerPropertyVisit()
         {
             var method = GetMethod("get_Item");
@@ -216,10 +210,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.GetProperty);
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsSetIndexerPropertyVisit()
         {
             var method = GetMethod("set_Item");
@@ -228,10 +222,10 @@ namespace Tests.HyperMock.Core
 
             var visits = _visits.FindBy(expression, CallType.SetProperty, new object[] {"Homer"});
 
-            Assert.AreEqual(1, visits.Length);
+            Assert.Equal(1, visits.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResetCallsRemovesVisits()
         {
             var method = GetMethod("Save");
@@ -239,7 +233,7 @@ namespace Tests.HyperMock.Core
 
             _visits.Reset();
 
-            Assert.AreEqual(0, _visits.RecordedVisits.Count);
+            Assert.Equal(0, _visits.RecordedVisits.Count);
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local

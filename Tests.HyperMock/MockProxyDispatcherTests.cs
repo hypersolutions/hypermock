@@ -1,18 +1,13 @@
 ﻿using System.Linq;
 using HyperMock;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock
 {
-    [TestClass]
     public class MockProxyDispatcherTests
     {
-        [TestMethod]
+        [Fact]
         public void CallToMethodIsRecorded()
         {
             var mock = Mock.Create<IAccountService>();
@@ -20,10 +15,10 @@ namespace Tests.HyperMock
             mock.Object.Credit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.IsNotNull(visit);
+            Assert.NotNull(visit);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToMethodIsRecordsName()
         {
             var mock = Mock.Create<IAccountService>();
@@ -31,10 +26,10 @@ namespace Tests.HyperMock
             mock.Object.Credit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual("Credit", visit.Name);
+            Assert.Equal("Credit", visit.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToMethodIsRecordsArgs()
         {
             var mock = Mock.Create<IAccountService>();
@@ -42,12 +37,12 @@ namespace Tests.HyperMock
             mock.Object.Credit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(2, visit.Parameters.Length);
-            Assert.AreEqual("12345678", visit.Parameters[0].Value);
-            Assert.AreEqual(100, visit.Parameters[1].Value);
+            Assert.Equal(2, visit.Parameters.Length);
+            Assert.Equal("12345678", visit.Parameters[0].Value);
+            Assert.Equal(100, visit.Parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToFunctionIsRecorded()
         {
             var mock = Mock.Create<IAccountService>();
@@ -55,10 +50,10 @@ namespace Tests.HyperMock
             mock.Object.CanDebit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.IsNotNull(visit);
+            Assert.NotNull(visit);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToFunctionIsRecordsName()
         {
             var mock = Mock.Create<IAccountService>();
@@ -66,10 +61,10 @@ namespace Tests.HyperMock
             mock.Object.CanDebit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual("CanDebit", visit.Name);
+            Assert.Equal("CanDebit", visit.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToFunctionIsRecordsArgs()
         {
             var mock = Mock.Create<IAccountService>();
@@ -77,12 +72,12 @@ namespace Tests.HyperMock
             mock.Object.CanDebit("12345678", 100);
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(2, visit.Parameters.Length);
-            Assert.AreEqual("12345678", visit.Parameters[0].Value);
-            Assert.AreEqual(100, visit.Parameters[1].Value);
+            Assert.Equal(2, visit.Parameters.Length);
+            Assert.Equal("12345678", visit.Parameters[0].Value);
+            Assert.Equal(100, visit.Parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToGetPropertyIsRecorded()
         {
             var mock = Mock.Create<IAccountService>();
@@ -91,10 +86,10 @@ namespace Tests.HyperMock
             var result = mock.Object.HasAccounts;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.IsNotNull(visit);
+            Assert.NotNull(visit);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToGetPropertyIsRecordsName()
         {
             var mock = Mock.Create<IAccountService>();
@@ -103,10 +98,10 @@ namespace Tests.HyperMock
             var result = mock.Object.HasAccounts;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual("get_HasAccounts", visit.Name);
+            Assert.Equal("get_HasAccounts", visit.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToSetPropertyIsRecorded()
         {
             var mock = Mock.Create<IAccountService>();
@@ -114,10 +109,10 @@ namespace Tests.HyperMock
             mock.Object.HasAccounts = true;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.IsNotNull(visit);
+            Assert.NotNull(visit);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToSetPropertyIsRecordsName()
         {
             var mock = Mock.Create<IAccountService>();
@@ -125,10 +120,10 @@ namespace Tests.HyperMock
             mock.Object.HasAccounts = true;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual("set_HasAccounts", visit.Name);
+            Assert.Equal("set_HasAccounts", visit.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void CallToSetPropertyIsRecordsArgs()
         {
             var mock = Mock.Create<IAccountService>();
@@ -136,8 +131,8 @@ namespace Tests.HyperMock
             mock.Object.HasAccounts = true;
 
             var visit = mock.Dispatcher.Visits.RecordedVisits.Last();
-            Assert.AreEqual(1, visit.Parameters.Length);
-            Assert.AreEqual(true, visit.Parameters[0].Value);
+            Assert.Equal(1, visit.Parameters.Length);
+            Assert.Equal(true, visit.Parameters[0].Value);
         }
     }
 }

@@ -1,54 +1,24 @@
 ﻿using System.Threading.Tasks;
 using HyperMock;
 using Tests.HyperMock.Support;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
-    public class ResetOccurenceTests
+    public class ResetOccurenceTests : IClassFixture<ResetOccurenceTests.AuthenticationServiceBuilder>
     {
-        private static Mock<IDataService> _mockDataService;
-        private static Mock<ISettingsService> _mockSettingsService;
-        private static AuthenticationService _authenticationService;
+        private readonly Mock<IDataService> _mockDataService;
+        private readonly Mock<ISettingsService> _mockSettingsService;
+        private readonly AuthenticationService _authenticationService;
 
-        [ClassInitialize]
-        public static void Initialise(TestContext context)
+        public ResetOccurenceTests(ResetOccurenceTests.AuthenticationServiceBuilder builder)
         {
-            // Create and setup mock data service
-            _mockDataService = Mock.Create<IDataService>();
-
-            _mockDataService
-                .Setup(s => s.GetUserByUsernameAndPassword("TestUser", "TestPassword"))
-                .Returns(Task.Run(() =>
-                    new DataServiceResponse<UserModel>
-                    {
-                        ResponseType = ResponseTypes.Success,
-                        Result = new UserModel(),
-                    }));
-
-            // Setup mock for an invalid user
-            _mockDataService
-                .Setup(s => s.GetUserByUsernameAndPassword(Param.IsAny<string>(), Param.IsAny<string>()))
-                .Returns(Task.Run(() =>
-                    new DataServiceResponse<UserModel>
-                    {
-                        ResponseType = ResponseTypes.HttpError,
-                        Result = null,
-                        Error = new ErrorModel(),
-                    }));
-
-            // Create mock settings service
-            _mockSettingsService = Mock.Create<ISettingsService>();
-
-            _authenticationService = new AuthenticationService(_mockSettingsService.Object, _mockDataService.Object);
+            _authenticationService = builder.AuthenticationService;
+            _mockSettingsService = builder.MockSettingsService;
+            _mockDataService = builder.MockDataService;
         }
-
-        [TestMethod]
+        
+        [Fact]
         public async Task AuthenticateUserReturnsValidTrueForKnownUser()
         {
             using (Mock.CallGroup(_mockDataService, _mockSettingsService))
@@ -59,11 +29,11 @@ namespace Tests.HyperMock.Integration
                     Occurred.Once());
                 _mockSettingsService.VerifySet(s => s.CurrentUser, Occurred.Once());
 
-                Assert.IsTrue(authenticatedUserResult);
+                Assert.True(authenticatedUserResult);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task AuthenticateUserReturnsValidFalseForUnknownUser()
         {
             using (Mock.CallGroup(_mockDataService, _mockSettingsService))
@@ -73,10 +43,46 @@ namespace Tests.HyperMock.Integration
                 _mockDataService.Verify(s => s.GetUserByUsernameAndPassword("Hacker", "LetMeIn"), Occurred.Once());
                 _mockSettingsService.VerifySet(s => s.CurrentUser, Occurred.Never());
 
-                Assert.IsFalse(authenticatedUserResult);
+                Assert.False(authenticatedUserResult);
+            }
+        }
+
+        public sealed class AuthenticationServiceBuilder
+        {
+            public readonly Mock<IDataService> MockDataService;
+            public readonly Mock<ISettingsService> MockSettingsService;
+            public readonly AuthenticationService AuthenticationService;
+
+            public AuthenticationServiceBuilder()
+            {
+                // Create and setup mock data service
+                MockDataService = Mock.Create<IDataService>();
+
+                MockDataService
+                    .Setup(s => s.GetUserByUsernameAndPassword("TestUser", "TestPassword"))
+                    .Returns(Task.Run(() =>
+                        new DataServiceResponse<UserModel>
+                        {
+                            ResponseType = ResponseTypes.Success,
+                            Result = new UserModel(),
+                        }));
+
+                // Setup mock for an invalid user
+                MockDataService
+                    .Setup(s => s.GetUserByUsernameAndPassword(Param.IsAny<string>(), Param.IsAny<string>()))
+                    .Returns(Task.Run(() =>
+                        new DataServiceResponse<UserModel>
+                        {
+                            ResponseType = ResponseTypes.HttpError,
+                            Result = null,
+                            Error = new ErrorModel(),
+                        }));
+
+                // Create mock settings service
+                MockSettingsService = Mock.Create<ISettingsService>();
+
+                AuthenticationService = new AuthenticationService(MockSettingsService.Object, MockDataService.Object);
             }
         }
     }
-
-    
 }

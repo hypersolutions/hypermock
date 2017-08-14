@@ -1,16 +1,11 @@
-﻿#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
-using Tests.HyperMock.Support;
+﻿using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
     public class SetupOutAndRefArgumentTests : TestBase<ConverterService>
     {
-        [TestMethod]
+        [Fact]
         public void GetValueReturnsIntFromOutArg()
         {
             int value;
@@ -18,10 +13,10 @@ namespace Tests.HyperMock.Integration
 
             var result = Subject.GetValue("123");
 
-            Assert.AreEqual(123, result);
+            Assert.Equal(123, result);
         }
 
-        [TestMethod]
+        [Fact]
         public void FormatTextReturnsStringFromRefArg()
         {
             string text = null;
@@ -29,10 +24,10 @@ namespace Tests.HyperMock.Integration
 
             var result = Subject.FormatText("123");
 
-            Assert.AreEqual("321", result);
+            Assert.Equal("321", result);
         }
 
-        [TestMethod]
+        [Fact]
         public void InsertSpaceReturnsStringWithSpaceBetweenOutAndRefArgs()
         {
             string text = null;
@@ -42,7 +37,7 @@ namespace Tests.HyperMock.Integration
 
             var result = Subject.InsertSpace("123");
 
-            Assert.AreEqual("321 123", result);
+            Assert.Equal("321 123", result);
         }
     }
 }

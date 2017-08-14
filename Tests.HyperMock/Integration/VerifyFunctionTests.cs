@@ -1,18 +1,13 @@
 ﻿using HyperMock;
 using HyperMock.Exceptions;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
     public class VerifyFunctionTests : TestBase<AccountController>
     {
-        [TestMethod]
+        [Fact]
         public void VerifyNever()
         {
             var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
@@ -20,7 +15,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyExactlyOnce()
         {
             var info = new AccountInfo {Number = "12345678", DebitAmount = 100};
@@ -30,7 +25,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyExactMatch()
         {
             var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
@@ -42,26 +37,23 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Exactly(3));
         }
 
-        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
-        [TestMethod]
-        public void VerifyAtLeast()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void VerifyAtLeast(int atLeastCount)
         {
-            var data = new[] {1, 2, 3};
+            var info = new AccountInfo {Number = "12345678", DebitAmount = 100};
 
-            foreach (var atLeastCount in data)
-            {
-                var info = new AccountInfo {Number = "12345678", DebitAmount = 100};
+            Subject.Debit(info);
+            Subject.Debit(info);
+            Subject.Debit(info);
 
-                Subject.Debit(info);
-                Subject.Debit(info);
-                Subject.Debit(info);
-
-                MockFor<IAccountService>().Verify(
-                    s => s.CanDebit(info.Number, info.DebitAmount), Occurred.AtLeast(atLeastCount));
-            }
+            MockFor<IAccountService>().Verify(
+                s => s.CanDebit(info.Number, info.DebitAmount), Occurred.AtLeast(atLeastCount));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyExactlyTwiceWithAnyParam()
         {
             var info1 = new AccountInfo { Number = "12345678", DebitAmount = 100 };
@@ -74,7 +66,7 @@ namespace Tests.HyperMock.Integration
                 Param.IsAny<string>(), Param.IsAny<int>()), Occurred.Exactly(2));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyExactlyOnceWithSeparateParams()
         {
             var info1 = new AccountInfo { Number = "12345678", DebitAmount = 100 };
@@ -87,72 +79,40 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().Verify(s => s.CanDebit(info2.Number, info2.DebitAmount), Occurred.Once());
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void VerifyNeverThrowsException()
         {
             var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
 
             Subject.Debit(info);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().Verify(
                     s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Never()));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyAtLeastThrowsException()
         {
             var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
 
             Subject.Debit(info);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().Verify(
                     s => s.CanDebit(info.Number, info.DebitAmount), Occurred.AtLeast(2)));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifyExactlyThrowsException()
         {
             var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
 
             Subject.Debit(info);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().Verify(
                     s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Exactly(2)));
         }
-#else
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifyNeverThrowsException()
-        {
-            var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
-
-            Subject.Debit(info);
-
-            MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Never());
-        }
-
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifyAtLeastThrowsException()
-        {
-            var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
-
-            Subject.Debit(info);
-
-            MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.AtLeast(2));
-        }
-
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifyExactlyThrowsException()
-        {
-            var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
-
-            Subject.Debit(info);
-
-            MockFor<IAccountService>().Verify(s => s.CanDebit(info.Number, info.DebitAmount), Occurred.Exactly(2));
-        }
-#endif
     }
 }

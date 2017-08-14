@@ -1,47 +1,25 @@
 using HyperMock.Core;
 using HyperMock.Exceptions;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Core
 {
-    [TestClass]
     public class ExactOccurredTests
     {
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void AssertThrowsExceptionForMismatch()
         {
             var occurred = new ExactOccurred(1);
             
-            Assert.ThrowsException<VerificationException>(() => occurred.Assert(0));
+            Assert.Throws<VerificationException>(() => occurred.Assert(0));
         }
-#else
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void AssertThrowsExceptionForMismatch()
-        {
-            var occurred = new ExactOccurred(1);
 
-            occurred.Assert(0);
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void AssertSuccessForMatch()
         {
             var occurred = new ExactOccurred(1);
 
-            try
-            {
-                occurred.Assert(1);
-            }
-            catch (VerificationException verifyError)
-            {
-                Assert.Fail($"Successful verification threw a VerificationException: {verifyError}");
-            }
+            occurred.Assert(1);
         }
     }
 }

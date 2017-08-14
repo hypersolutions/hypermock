@@ -1,18 +1,13 @@
 using System;
 using HyperMock;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
     public class RaiseEventTests : TestBase<ThermostatController>
     {
-        [TestMethod]
+        [Fact]
         public void RaiseInvokesAddHandler()
         {
             MockFor<IThermostatService>().Raise(s => s.Hot += null, new EventArgs());
@@ -20,7 +15,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IThermostatService>().Verify(p => p.SwitchOff(), Occurred.Once());
         }
         
-        [TestMethod]
+        [Fact]
         public void RaiseDoesNotInvokeAddHandler()
         {
             MockFor<IThermostatService>().Raise(s => s.Cold += null, new EventArgs());
@@ -28,7 +23,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IThermostatService>().Verify(p => p.SwitchOn(), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void RaiseInvokesAddHandlerWithParams()
         {
             const int temp = 100;

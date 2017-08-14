@@ -2,194 +2,163 @@
 using System.Linq;
 using HyperMock;
 using HyperMock.Behaviors;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock
 {
-    [TestClass]
     public class MockTests
     {
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void CreateGenericThrowsExceptionForAbstractClass()
         {
-            Assert.ThrowsException<NotSupportedException>(() => Mock.Create<NonSupportedAbstractClass>());
+            Assert.Throws<NotSupportedException>(() => Mock.Create<NonSupportedAbstractClass>());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateGenericThrowsExceptionForConcreteClass()
         {
-            Assert.ThrowsException<NotSupportedException>(() => Mock.Create<AccountService>());
+            Assert.Throws<NotSupportedException>(() => Mock.Create<AccountService>());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeThrowsExceptionForAbstractClass()
         {
-            Assert.ThrowsException<NotSupportedException>(() => Mock.Create(typeof(NonSupportedAbstractClass)));
+            Assert.Throws<NotSupportedException>(() => Mock.Create(typeof(NonSupportedAbstractClass)));
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeThrowsExceptionForConcreteClass()
         {
-            Assert.ThrowsException<NotSupportedException>(() => Mock.Create(typeof(AccountService)));
-        }
-#else
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void CreateGenericThrowsExceptionForAbstractClass()
-        {
-            Mock.Create<NonSupportedAbstractClass>();
+            Assert.Throws<NotSupportedException>(() => Mock.Create(typeof(AccountService)));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void CreateGenericThrowsExceptionForConcreteClass()
-        {
-            Mock.Create<AccountService>();
-        }
-
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void CreateTypeThrowsExceptionForAbstractClass()
-        {
-            Mock.Create(typeof(NonSupportedAbstractClass));
-        }
-
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void CreateTypeThrowsExceptionForConcreteClass()
-        {
-            Mock.Create(typeof(AccountService));
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void CreateGenericReturnsMockInstance()
         {
             var mock = Mock.Create<IAccountService>();
 
-            Assert.IsNotNull(mock);
+            Assert.NotNull(mock);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateGenericReturnsMockObjectInstance()
         {
             var mock = Mock.Create<IAccountService>();
 
-            Assert.IsNotNull(mock.Object);
+            Assert.NotNull(mock.Object);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateGenericReturnsMockDispatcherInstance()
         {
             var mock = Mock.Create<IAccountService>();
 
-            Assert.IsNotNull(mock.Dispatcher);
+            Assert.NotNull(mock.Dispatcher);
         }
         
-        [TestMethod]
+        [Fact]
         public void CreateTypeReturnsMockInstance()
         {
             var mock = Mock.Create(typeof(IAccountService));
 
-            Assert.IsNotNull(mock);
+            Assert.NotNull(mock);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeReturnsMockObjectInstance()
         {
             var mock = Mock.Create(typeof(IAccountService));
 
-            Assert.IsNotNull(mock.Object);
+            Assert.NotNull(mock.Object);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeReturnsMockDispatcherInstance()
         {
             var mock = Mock.Create(typeof(IAccountService));
 
-            Assert.IsNotNull(mock.Dispatcher);
+            Assert.NotNull(mock.Dispatcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupAddsMethodBehaviourInfoToDispatcher()
         {
             var mock = Mock.Create<IAccountService>();
 
             mock.Setup(s => s.Credit("12345678", 100));
             
-            Assert.IsTrue(mock.Dispatcher.Setups.InfoList.Any());
+            Assert.True(mock.Dispatcher.Setups.InfoList.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupReturnsMethodCall()
         {
             var mock = Mock.Create<IAccountService>();
 
             var result = mock.Setup(s => s.Credit("12345678", 100));
 
-            Assert.IsInstanceOfType(result, typeof(MethodCall));
+            Assert.IsType<MethodCall>(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupAddsFunctionBehaviourInfoToDispatcher()
         {
             var mock = Mock.Create<IAccountService>();
 
             mock.Setup(s => s.CanDebit("12345678", 100));
 
-            Assert.IsTrue(mock.Dispatcher.Setups.InfoList.Any());
+            Assert.True(mock.Dispatcher.Setups.InfoList.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupReturnsFunctionCall()
         {
             var mock = Mock.Create<IAccountService>();
 
             var result = mock.Setup(s => s.CanDebit("12345678", 100));
 
-            Assert.IsInstanceOfType(result, typeof(FunctionCall<bool>));
+            Assert.IsType<FunctionCall<bool>>(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupGetAddsPropertyBehaviourInfoToDispatcher()
         {
             var mock = Mock.Create<IAccountService>();
 
             mock.SetupGet(s => s.HasAccounts);
 
-            Assert.IsTrue(mock.Dispatcher.Setups.InfoList.Any());
+            Assert.True(mock.Dispatcher.Setups.InfoList.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupGetReturnsFunctionCall()
         {
             var mock = Mock.Create<IAccountService>();
 
             var result = mock.SetupGet(s => s.HasAccounts);
 
-            Assert.IsInstanceOfType(result, typeof(GetPropertyCall<bool>));
+            Assert.IsType<GetPropertyCall<bool>>(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupSetAddsPropertyBehaviourInfoToDispatcher()
         {
             var mock = Mock.Create<IAccountService>();
 
             mock.SetupSet(s => s.HasAccounts);
 
-            Assert.IsTrue(mock.Dispatcher.Setups.InfoList.Any());
+            Assert.True(mock.Dispatcher.Setups.InfoList.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupSetReturnsMethodCall()
         {
             var mock = Mock.Create<IAccountService>();
 
             var result = mock.SetupSet(s => s.HasAccounts);
 
-            Assert.IsInstanceOfType(result, typeof(SetPropertyCall<bool>));
+            Assert.IsType<SetPropertyCall<bool>>(result);
         }
     }
 }

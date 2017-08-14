@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Xunit;
 
 namespace HyperMock.Universal.Examples
 {
-    [TestClass]
     public class AccountControllerTests
     {
-        [TestMethod]
+        [Fact]
         public void CreditAddsToAccount()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -19,7 +18,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Credit(info.Number, info.CreditAmount), Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreditWithInvalidAmountThrowsException()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -27,10 +26,10 @@ namespace HyperMock.Universal.Examples
             var info = new AccountInfo { Number = "1234", CreditAmount = -100 };
             mockService.Setup(s => s.Credit(info.Number, Param.Is<int>(p => p < 1))).Throws(new NotSupportedException());
 
-            Assert.ThrowsException<NotSupportedException>(() => controller.Credit(info));
+            Assert.Throws<NotSupportedException>(() => controller.Credit(info));
         }
 
-        [TestMethod]
+        [Fact]
         public void CreditFailsWithUnknownAmount()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -42,7 +41,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Credit(info.Number, 200), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreditWithAnyAmount()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -54,7 +53,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Credit(info.Number, Param.IsAny<int>()), Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreditWithAmountAboveMin()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -66,7 +65,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Credit(info.Number, Param.Is<int>(p => p > 1)), Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void CreditFailsWithAmountBelowMin()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -78,7 +77,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Credit(info.Number, Param.Is<int>(p => p > 1)), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void DebitCorrectAccount()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -94,7 +93,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Debit(info1.Number, info1.DebitAmount), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void DebitCorrectAccountMatchingRegex()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -109,7 +108,7 @@ namespace HyperMock.Universal.Examples
             mockService.Verify(s => s.Debit(info2.Number, info2.DebitAmount), Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void HasAccounts()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -118,10 +117,10 @@ namespace HyperMock.Universal.Examples
 
             var result = controller.HasAccounts();
 
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void HasNoAccounts()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -130,10 +129,10 @@ namespace HyperMock.Universal.Examples
 
             var result = controller.HasAccounts();
 
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void ManageDisablesAccount()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -144,17 +143,17 @@ namespace HyperMock.Universal.Examples
             mockService.VerifySet(s => s.HasAccounts, false, Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void ManageDisablesAccountThrowsException()
         {
             var mockService = Mock.Create<IAccountService>();
             var controller = new AccountController(mockService.Object);
             mockService.SetupSet(s => s.HasAccounts).SetValue(false).Throws<NotSupportedException>();
 
-            Assert.ThrowsException<NotSupportedException>(() => controller.Manage(false));
+            Assert.Throws<NotSupportedException>(() => controller.Manage(false));
         }
 
-        [TestMethod]
+        [Fact]
         public async Task DownloadStatementsAsyncReturnsStatement()
         {
             var mockService = Mock.Create<IAccountService>();
@@ -165,10 +164,10 @@ namespace HyperMock.Universal.Examples
 
             var statement = await controller.DownloadStatementsAsync(info);
 
-            Assert.AreEqual("Statement", statement);
+            Assert.Equal("Statement", statement);
         }
 
-        [TestMethod]
+        [Fact]
         public void ManageDisablesAccountUsingStrictSetup()
         {
             var mockService = Mock.Create<IAccountService>(MockBehavior.Strict);

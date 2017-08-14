@@ -1,24 +1,19 @@
 using HyperMock;
 using HyperMock.Exceptions;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using Tests.HyperMock.Support;
+using Xunit;
 
 namespace Tests.HyperMock.Integration
 {
-    [TestClass]
     public class VerifySetPropertyTests : TestBase<AccountController>
     {
-        [TestMethod]
+        [Fact]
         public void VerifySetNever()
         {
             MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Never());
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetExactlyOnce()
         {
             Subject.Manage(true);
@@ -26,7 +21,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetExactMatch()
         {
             Subject.Manage(true);
@@ -36,93 +31,56 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Exactly(3));
         }
 
-        // Diff between windows and uwp MSTest. Windows one supports DataSource and UWP supports DataRows! 
-        [TestMethod]
-        public void VerifySetAtLeast()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void VerifySetAtLeast(int atLeastCount)
         {
-            var data = new[] { 1, 2, 3 };
+            Subject.Manage(true);
+            Subject.Manage(true);
+            Subject.Manage(true);
 
-            foreach (var atLeastCount in data)
-            {
-                Subject.Manage(true);
-                Subject.Manage(true);
-                Subject.Manage(true);
-
-                MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.AtLeast(atLeastCount));
-            }
+            MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.AtLeast(atLeastCount));
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void VerifySetNeverThrowsException()
         {
             Subject.Manage(true);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Never()));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetAtLeastThrowsException()
         {
             Subject.Manage(true);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.AtLeast(2)));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetExactlyThrowsException()
         {
             Subject.Manage(true);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Exactly(2)));
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetWithValueThrowsException()
         {
             Subject.Manage(true);
 
-            Assert.ThrowsException<VerificationException>(
+            Assert.Throws<VerificationException>(
                 () => MockFor<IAccountService>().VerifySet(s => s.HasAccounts, false, Occurred.Once()));
         }
-#else
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifySetNeverThrowsException()
-        {
-            Subject.Manage(true);
 
-            MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Never());
-        }
-
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifySetAtLeastThrowsException()
-        {
-            Subject.Manage(true);
-
-            MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.AtLeast(2));
-        }
-
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifySetExactlyThrowsException()
-        {
-            Subject.Manage(true);
-
-            MockFor<IAccountService>().VerifySet(s => s.HasAccounts, Occurred.Exactly(2));
-        }
-
-        [TestMethod, ExpectedException(typeof(VerificationException))]
-        public void VerifySetWithValueThrowsException()
-        {
-            Subject.Manage(true);
-
-            MockFor<IAccountService>().VerifySet(s => s.HasAccounts, false, Occurred.Once());
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void VerifySetWithValueExactMatch()
         {
             Subject.Manage(true);
@@ -130,7 +88,7 @@ namespace Tests.HyperMock.Integration
             MockFor<IAccountService>().VerifySet(s => s.HasAccounts, true, Occurred.Once());
         }
 
-        [TestMethod]
+        [Fact]
         public void VerifySetWithValueNever()
         {
             Subject.Manage(true);

@@ -4,26 +4,20 @@ using System.Reflection;
 using HyperMock;
 using HyperMock.Core;
 using HyperMock.Matchers;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Core
 {
-    [TestClass]
     public class ParameterListTests
     {
-        private ParameterList _parameterList;
+        private readonly ParameterList _parameterList;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public ParameterListTests()
         {
             _parameterList = new ParameterList();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsFalseForExactMatchOnArg()
         {
             var parameters = new[]
@@ -33,10 +27,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 100);
 
-            Assert.IsFalse(isMatch);
+            Assert.False(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsTrueForExactMatchOnArg()
         {
             var parameters = new[]
@@ -46,10 +40,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 10);
 
-            Assert.IsTrue(isMatch);
+            Assert.True(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsFalseForExactMatchOnMultipleArgs()
         {
             var parameters = new[]
@@ -60,10 +54,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 100, 200);
 
-            Assert.IsFalse(isMatch);
+            Assert.False(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsTrueForExactMatchOnMultipleArgs()
         {
             var parameters = new[]
@@ -74,10 +68,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 10, 20);
 
-            Assert.IsTrue(isMatch);
+            Assert.True(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsTrueForAnyMatchOnArg()
         {
             var parameters = new[]
@@ -87,10 +81,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 100);
 
-            Assert.IsTrue(isMatch);
+            Assert.True(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsMatchForReturnsTrueForAnyMatchOnMultipleArgs()
         {
             var parameters = new[]
@@ -101,10 +95,10 @@ namespace Tests.HyperMock.Core
 
             var isMatch = _parameterList.IsMatchFor(parameters, 100, 200);
 
-            Assert.IsTrue(isMatch);
+            Assert.True(isMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsNoParametersForNullMethodExpression()
         {
             Expression<Action> expression = () => TestMethod();
@@ -112,20 +106,20 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(0, parameters.Length);
+            Assert.Equal(0, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsNoParametersForEmptyMethodArgs()
         {
             Expression<Action> expression = () => TestMethod();
 
             var parameters = _parameterList.BuildFrom(null, expression);
 
-            Assert.AreEqual(0, parameters.Length);
+            Assert.Equal(0, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParametersForMethodArgs()
         {
             Expression<Action> expression = () => TestMethod2(10, 20);
@@ -133,10 +127,10 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(2, parameters.Length);
+            Assert.Equal(2, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterValuesForMethodArgs()
         {
             Expression<Action> expression = () => TestMethod2(10, 20);
@@ -144,11 +138,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(10, parameters[0].Value);
-            Assert.AreEqual(20, parameters[1].Value);
+            Assert.Equal(10, parameters[0].Value);
+            Assert.Equal(20, parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsExactParameterMatchersForMethodArgs()
         {
             Expression<Action> expression = () => TestMethod2(10, 20);
@@ -156,11 +150,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(ExactParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<ExactParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsAnyParameterMatchersForMethodArgs()
         {
             Expression<Action> expression = () => TestMethod2(Param.IsAny<int>(), 20);
@@ -168,11 +162,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(AnyParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<AnyParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsRefParameterForMethodArgs()
         {
             string text = null;
@@ -181,10 +175,10 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(ParameterType.Ref, parameters[0].Type);
+            Assert.Equal(ParameterType.Ref, parameters[0].Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsNoParametersForEmptyFunctionArgs()
         {
             Expression<Func<int>> expression = () => TestFunction();
@@ -192,10 +186,10 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(0, parameters.Length);
+            Assert.Equal(0, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParametersForFunctionArgs()
         {
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
@@ -203,10 +197,10 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(2, parameters.Length);
+            Assert.Equal(2, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterValuesForFunctionArgs()
         {
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
@@ -214,11 +208,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(10, parameters[0].Value);
-            Assert.AreEqual(20, parameters[1].Value);
+            Assert.Equal(10, parameters[0].Value);
+            Assert.Equal(20, parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsExactParameterMatchersForFunctionArgs()
         {
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
@@ -226,11 +220,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(ExactParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<ExactParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterTypeForFunctionInArgs()
         {
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
@@ -238,11 +232,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(ParameterType.In, parameters[0].Type);
-            Assert.AreEqual(ParameterType.In, parameters[1].Type);
+            Assert.Equal(ParameterType.In, parameters[0].Type);
+            Assert.Equal(ParameterType.In, parameters[1].Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterTypeForFunctionOutArgs()
         {
             int x;
@@ -251,11 +245,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.AreEqual(ParameterType.In, parameters[0].Type);
-            Assert.AreEqual(ParameterType.Out, parameters[1].Type);
+            Assert.Equal(ParameterType.In, parameters[0].Type);
+            Assert.Equal(ParameterType.Out, parameters[1].Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsAnyParameterMatchersForFunctionArgs()
         {
             Expression<Func<int>> expression = () => TestFunction2(Param.IsAny<int>(), 20);
@@ -263,11 +257,11 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(AnyParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<AnyParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsPredicateParameterMatchersForMethodArgs()
         {
             Expression<Action> expression = () => TestMethod2(Param.Is<int>(p => p > 10 && p < 20), 20);
@@ -275,81 +269,81 @@ namespace Tests.HyperMock.Core
 
             var parameters = _parameterList.BuildFrom(body, expression);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(PredicateParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<PredicateParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromOverloadReturnsEmptyParametersForMethodWithNoArgs()
         {
             var method = GetMethod("TestMethod");
             var parameters = _parameterList.BuildFrom(method);
 
-            Assert.AreEqual(0, parameters.Length);
+            Assert.Equal(0, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromOverloadReturnsParametersForMethodArgs()
         {
             var method = GetMethod("TestMethod2");
             
             var parameters = _parameterList.BuildFrom(method, 10, 20);
 
-            Assert.AreEqual(2, parameters.Length);
+            Assert.Equal(2, parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromOverloadReturnsParameterValuesForMethodArgs()
         {
             var method = GetMethod("TestMethod2");
 
             var parameters = _parameterList.BuildFrom(method, 10, 20);
 
-            Assert.AreEqual(10, parameters[0].Value);
-            Assert.AreEqual(20, parameters[1].Value);
+            Assert.Equal(10, parameters[0].Value);
+            Assert.Equal(20, parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterInTypeForMethodArgs()
         {
             var method = GetMethod("TestMethod2");
 
             var parameters = _parameterList.BuildFrom(method, 10, 20);
 
-            Assert.AreEqual(ParameterType.In, parameters[0].Type);
-            Assert.AreEqual(ParameterType.In, parameters[1].Type);
+            Assert.Equal(ParameterType.In, parameters[0].Type);
+            Assert.Equal(ParameterType.In, parameters[1].Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterExactMatcherForMethodArgs()
         {
             var method = GetMethod("TestMethod2");
 
             var parameters = _parameterList.BuildFrom(method, 10, 20);
 
-            Assert.IsInstanceOfType(parameters[0].Matcher, typeof(ExactParameterMatcher));
-            Assert.IsInstanceOfType(parameters[1].Matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<ExactParameterMatcher>(parameters[0].Matcher);
+            Assert.IsType<ExactParameterMatcher>(parameters[1].Matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterOutTypeForMethodArgs()
         {
             var method = GetMethod("TryTestFunction");
 
             var parameters = _parameterList.BuildFrom(method, "test", 0);
 
-            Assert.AreEqual(ParameterType.In, parameters[0].Type);
-            Assert.AreEqual(ParameterType.Out, parameters[1].Type);
+            Assert.Equal(ParameterType.In, parameters[0].Type);
+            Assert.Equal(ParameterType.Out, parameters[1].Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void BuildFromReturnsParameterRefTypeForMethodArgs()
         {
             var method = GetMethod("TestMethod3");
 
             var parameters = _parameterList.BuildFrom(method, "test");
 
-            Assert.AreEqual(ParameterType.Ref, parameters[0].Type);
+            Assert.Equal(ParameterType.Ref, parameters[0].Type);
         }
 
         private void TestMethod()

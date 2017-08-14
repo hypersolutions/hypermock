@@ -2,54 +2,38 @@
 using System.Linq.Expressions;
 using HyperMock.Core;
 using HyperMock.Setups;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Setups
 {
-    [TestClass]
     public class SetupInfoListTests
     {
-        private SetupInfoList _setupInfoList;
+        private readonly SetupInfoList _setupInfoList;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public SetupInfoListTests()
         {
             _setupInfoList = new SetupInfoList();
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void AddOrGetPropertyWithNoGetterThrowsException()
         {
             Expression<Func<int>> expression = () => 1;
 
-            Assert.ThrowsException<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.GetProperty));
+            Assert.Throws<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.GetProperty));
         }
-#else
-        [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void AddOrGetPropertyWithNoGetterThrowsException()
-        {
-            Expression<Func<int>> expression = () => 1;
 
-            _setupInfoList.AddOrGet(expression, CallType.GetProperty);
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void AddOrGetGetterReturnsSetupInfo()
         {
             Expression<Func<int>> expression = () => TestProperty;
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            Assert.AreEqual("get_TestProperty", setupInfo.Name);
+            Assert.Equal("get_TestProperty", setupInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetGetterReturnsExistingSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => TestProperty;
@@ -57,54 +41,36 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void AddOrGetPropertyWithNoSetterThrowsException()
         {
             Expression<Func<int>> expression = () => 1;
 
-            Assert.ThrowsException<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.SetProperty));
+            Assert.Throws<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.SetProperty));
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetSetterReadOnlyPropertyThrowsException()
         {
             Expression<Func<int>> expression = () => TestProperty;
 
-            Assert.ThrowsException<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.SetProperty));
-        }
-#else
-        [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void AddOrGetPropertyWithNoSetterThrowsException()
-        {
-            Expression<Func<int>> expression = () => 1;
-
-            _setupInfoList.AddOrGet(expression, CallType.SetProperty);
+            Assert.Throws<ArgumentException>(() => _setupInfoList.AddOrGet(expression, CallType.SetProperty));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void AddOrGetSetterReadOnlyPropertyThrowsException()
-        {
-            Expression<Func<int>> expression = () => TestProperty;
-
-            _setupInfoList.AddOrGet(expression, CallType.SetProperty);
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void AddOrGetSetterReturnsSetupInfo()
         {
             Expression<Func<int>> expression = () => TestProperty2;
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            Assert.AreEqual("set_TestProperty2", setupInfo.Name);
+            Assert.Equal("set_TestProperty2", setupInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetSetterReturnsExistingSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => TestProperty2;
@@ -112,21 +78,21 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetMethodReturnsSetupInfoWithNoArgs()
         {
             Expression<Action> expression = () => TestMethod();
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Method);
 
-            Assert.AreEqual("TestMethod", setupInfo.Name);
-            Assert.AreEqual(0, setupInfo.Parameters.Length);
+            Assert.Equal("TestMethod", setupInfo.Name);
+            Assert.Equal(0, setupInfo.Parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetMethodReturnsExistingSetupInfoWithNoArgs()
         {
             Expression<Action> expression = () => TestMethod();
@@ -134,34 +100,34 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Method);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetMethodReturnsSetupInfoWithArgs()
         {
             Expression<Action> expression = () => TestMethod(0, 2);
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Method);
 
-            Assert.AreEqual("TestMethod", setupInfo.Name);
-            Assert.AreEqual(2, setupInfo.Parameters.Length);
-            Assert.AreEqual(0, setupInfo.Parameters[0].Value);
-            Assert.AreEqual(2, setupInfo.Parameters[1].Value);
+            Assert.Equal("TestMethod", setupInfo.Name);
+            Assert.Equal(2, setupInfo.Parameters.Length);
+            Assert.Equal(0, setupInfo.Parameters[0].Value);
+            Assert.Equal(2, setupInfo.Parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetFunctionReturnsSetupInfoWithNoArgs()
         {
             Expression<Func<int>> expression = () => TestFunction();
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Function);
 
-            Assert.AreEqual("TestFunction", setupInfo.Name);
-            Assert.AreEqual(0, setupInfo.Parameters.Length);
+            Assert.Equal("TestFunction", setupInfo.Name);
+            Assert.Equal(0, setupInfo.Parameters.Length);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetFunctionReturnsExistingSetupInfoWithNoArgs()
         {
             Expression<Func<int>> expression = () => TestFunction();
@@ -169,23 +135,23 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Function);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetFunctionReturnsSetupInfoWithArgs()
         {
             Expression<Func<int>> expression = () => TestFunction(0, 2);
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.Function);
 
-            Assert.AreEqual("TestFunction", setupInfo.Name);
-            Assert.AreEqual(2, setupInfo.Parameters.Length);
-            Assert.AreEqual(0, setupInfo.Parameters[0].Value);
-            Assert.AreEqual(2, setupInfo.Parameters[1].Value);
+            Assert.Equal("TestFunction", setupInfo.Name);
+            Assert.Equal(2, setupInfo.Parameters.Length);
+            Assert.Equal(0, setupInfo.Parameters[0].Value);
+            Assert.Equal(2, setupInfo.Parameters[1].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsGetPropertySetupInfo()
         {
             Expression<Func<int>> expression = () => TestProperty;
@@ -193,10 +159,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("get_TestProperty", new object[0]);
 
-            Assert.AreEqual(expectedSetupInfo, setupInfo);
+            Assert.Equal(expectedSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsNullSetupInfoForUnknownGetProperty()
         {
             Expression<Func<int>> expression = () => TestProperty;
@@ -204,10 +170,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", new object[0]);
 
-            Assert.IsNull(setupInfo);
+            Assert.Null(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsSetPropertySetupInfo()
         {
             Expression<Func<int>> expression = () => TestProperty2;
@@ -215,10 +181,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("set_TestProperty2", new object[0]);
 
-            Assert.AreEqual(expectedSetupInfo, setupInfo);
+            Assert.Equal(expectedSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsNullSetupInfoForUnknownSetProperty()
         {
             Expression<Func<int>> expression = () => TestProperty2;
@@ -226,10 +192,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", new object[0]);
 
-            Assert.IsNull(setupInfo);
+            Assert.Null(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsMethodSetupInfo()
         {
             Expression<Action> expression = () => TestMethod(10, 20);
@@ -237,10 +203,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("TestMethod", new object[] {10, 20});
 
-            Assert.AreEqual(expectedSetupInfo, setupInfo);
+            Assert.Equal(expectedSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsNullSetupInfoForUnknownMethod()
         {
             Expression<Action> expression = () => TestMethod(10, 20);
@@ -248,10 +214,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("UnknownTestMethod", new object[0]);
 
-            Assert.IsNull(setupInfo);
+            Assert.Null(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsFunctionSetupInfo()
         {
             Expression<Func<int>> expression = () => TestFunction(10, 20);
@@ -259,10 +225,10 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("TestFunction", new object[] { 10, 20 });
 
-            Assert.AreEqual(expectedSetupInfo, setupInfo);
+            Assert.Equal(expectedSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindByReturnsNullSetupInfoForUnknownFunction()
         {
             Expression<Func<int>> expression = () => TestFunction(10, 20);
@@ -270,20 +236,20 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.FindBy("UnknownTestFunction", new object[0]);
 
-            Assert.IsNull(setupInfo);
+            Assert.Null(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetIndexGetterReturnsSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => this["Homer"];
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            Assert.IsNotNull(setupInfo);
+            Assert.NotNull(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetIndexGetterReturnsExistingSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => this["Homer"];
@@ -291,20 +257,20 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetIndexSetterReturnsSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => this["Homer"];
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            Assert.IsNotNull(setupInfo);
+            Assert.NotNull(setupInfo);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOrGetIndexSetterReturnsExistingSetupInfoForMatch()
         {
             Expression<Func<int>> expression = () => this["Homer"];
@@ -312,7 +278,7 @@ namespace Tests.HyperMock.Setups
 
             var setupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            Assert.AreEqual(existingSetupInfo, setupInfo);
+            Assert.Equal(existingSetupInfo, setupInfo);
         }
 
         // ReSharper disable once UnassignedGetOnlyAutoProperty

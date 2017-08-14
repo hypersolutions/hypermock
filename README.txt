@@ -21,19 +21,10 @@ It contains a simple scenario where the subject under test has a dependency on a
 Tests
 -----
 
-The tests use MSTest. In each test there is a #if statement at the top to load the correct version of MSTest for each platform.
+The tests use XUnit. This allows the common tests to work for both UWP and Desktop frameworks. Again, the tests reside in a shared project.
 
-I have tried NUnit but although it seems to work, both R# and Test Explorer do not work consistently well (at time of writing).
-
-To avoid frustration, the tests make use in a few places of #if blocks. The main place this occurrs is around exception testing.
-
-MSTest is not consistent in this area. One platform prefers Assert.ThrowsException<> and the other uses the ExpectedException attribute. Neither have a shared process.
-
-Also due to the inconsistences again, standard DataRow tests are supported by the less elegant:
-
-var data = []{ 1,2,3} - whatever your values are.
-
-This will be reviewed in time when hopefully a framework that works well for all platforms and test runners becomes available.
+A note of caution. These tests are picked up by the test explorer built into VS but you need to ensure that the default process arhcitecture 
+is set to match the build configuration othewise the UWP tests may not be listed.
 
 
 Branches

@@ -3,42 +3,37 @@ using HyperMock.Behaviors;
 using HyperMock.Core;
 using HyperMock.Exceptions;
 using HyperMock.Setups;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace Tests.HyperMock.Behaviors
 {
-    [TestClass]
     public class MethodCallTests
     {
-        private MethodCall _methodCall;
+        private readonly MethodCall _methodCall;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public MethodCallTests()
         {
             _methodCall = new MethodCall(new SetupInfo());
         }
 
-        [TestMethod]
+        [Fact]
         public void ThrowsAttachesExceptionTypeToSetup()
         {
             _methodCall.Throws<NotSupportedException>();
 
-            Assert.IsInstanceOfType(_methodCall.SetupInfo.Exception, typeof(NotSupportedException));
+            Assert.IsType<NotSupportedException>(_methodCall.SetupInfo.Exception);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThrowsAttachesExceptionInstanceToSetup()
         {
-            _methodCall.Throws(new NotSupportedException());
+            var exception = new NotSupportedException();
+            _methodCall.Throws(exception);
 
-            Assert.IsInstanceOfType(_methodCall.SetupInfo.Exception, typeof(NotSupportedException));
+            Assert.Equal(exception, _methodCall.SetupInfo.Exception);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithOutArgsReturnsSelf()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -48,10 +43,10 @@ namespace Tests.HyperMock.Behaviors
 
             var self = _methodCall.WithOutArgs(10);
 
-            Assert.AreEqual(_methodCall, self);
+            Assert.Equal(_methodCall, self);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithOutArgsAttachesSingleValueToOutParameter()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -61,10 +56,10 @@ namespace Tests.HyperMock.Behaviors
 
             _methodCall.WithOutArgs(10);
 
-            Assert.AreEqual(10, _methodCall.SetupInfo.Parameters[0].Value);
+            Assert.Equal(10, _methodCall.SetupInfo.Parameters[0].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithOutArgsAttachesSingleValueToCorrectOutParameter()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -75,11 +70,10 @@ namespace Tests.HyperMock.Behaviors
 
             _methodCall.WithOutArgs(10);
 
-            Assert.AreEqual(10, _methodCall.SetupInfo.Parameters[1].Value);
+            Assert.Equal(10, _methodCall.SetupInfo.Parameters[1].Value);
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void WithOutArgsThrowsExceptionForNoParameterProvided()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -88,10 +82,10 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
             
-            Assert.ThrowsException<MockException>(() => _methodCall.WithOutArgs());
+            Assert.Throws<MockException>(() => _methodCall.WithOutArgs());
         }
 
-        [TestMethod]
+        [Fact]
         public void WithOutArgsThrowsExceptionForMoreParametersProvided()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -100,35 +94,10 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Out}
             };
 
-            Assert.ThrowsException<MockException>(() => _methodCall.WithOutArgs(10, 20));
-        }
-#else
-        [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithOutArgsThrowsExceptionForNoParameterProvided()
-        {
-            _methodCall.SetupInfo.Parameters = new[]
-            {
-                new Parameter {Type = ParameterType.In},
-                new Parameter {Type = ParameterType.Out}
-            };
-
-            _methodCall.WithOutArgs();
+            Assert.Throws<MockException>(() => _methodCall.WithOutArgs(10, 20));
         }
 
-        [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithOutArgsThrowsExceptionForMoreParametersProvided()
-        {
-            _methodCall.SetupInfo.Parameters = new[]
-            {
-                new Parameter {Type = ParameterType.In},
-                new Parameter {Type = ParameterType.Out}
-            };
-
-            _methodCall.WithOutArgs(10, 20);
-        }
-#endif
-
-        [TestMethod]
+        [Fact]
         public void WithRefArgsReturnsSelf()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -138,10 +107,10 @@ namespace Tests.HyperMock.Behaviors
 
             var self = _methodCall.WithRefArgs(10);
 
-            Assert.AreEqual(_methodCall, self);
+            Assert.Equal(_methodCall, self);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithRefArgsAttachesSingleValueToRefParameter()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -151,10 +120,10 @@ namespace Tests.HyperMock.Behaviors
 
             _methodCall.WithRefArgs(10);
 
-            Assert.AreEqual(10, _methodCall.SetupInfo.Parameters[0].Value);
+            Assert.Equal(10, _methodCall.SetupInfo.Parameters[0].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithRefArgsAttachesSingleValueToCorrectRefParameter()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -165,11 +134,10 @@ namespace Tests.HyperMock.Behaviors
 
             _methodCall.WithRefArgs(10);
 
-            Assert.AreEqual(10, _methodCall.SetupInfo.Parameters[1].Value);
+            Assert.Equal(10, _methodCall.SetupInfo.Parameters[1].Value);
         }
 
-#if WINDOWS_UWP
-        [TestMethod]
+        [Fact]
         public void WithRefArgsThrowsExceptionForNoParameterProvided()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -178,10 +146,10 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Ref}
             };
             
-            Assert.ThrowsException<MockException>(() => _methodCall.WithRefArgs());
+            Assert.Throws<MockException>(() => _methodCall.WithRefArgs());
         }
 
-        [TestMethod]
+        [Fact]
         public void WithRefArgsThrowsExceptionForMoreParametersProvided()
         {
             _methodCall.SetupInfo.Parameters = new[]
@@ -190,32 +158,7 @@ namespace Tests.HyperMock.Behaviors
                 new Parameter {Type = ParameterType.Ref}
             };
 
-            Assert.ThrowsException<MockException>(() => _methodCall.WithRefArgs(10, 20));
+            Assert.Throws<MockException>(() => _methodCall.WithRefArgs(10, 20));
         }
-#else
-        [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithRefArgsThrowsExceptionForNoParameterProvided()
-        {
-            _methodCall.SetupInfo.Parameters = new[]
-            {
-                new Parameter {Type = ParameterType.In},
-                new Parameter {Type = ParameterType.Ref}
-            };
-
-            _methodCall.WithRefArgs();
-        }
-
-        [TestMethod, ExpectedException(typeof(MockException))]
-        public void WithRefArgsThrowsExceptionForMoreParametersProvided()
-        {
-            _methodCall.SetupInfo.Parameters = new[]
-            {
-                new Parameter {Type = ParameterType.In},
-                new Parameter {Type = ParameterType.Ref}
-            };
-
-            _methodCall.WithRefArgs(10, 20);
-        }
-#endif
     }
 }

@@ -1,64 +1,58 @@
 ﻿using System;
 using System.Linq.Expressions;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using HyperMock;
 using HyperMock.Matchers;
+using Xunit;
 
 namespace Tests.HyperMock.Matchers
 {
-    [TestClass]
     public class ParameterMatcherFactoryTests
     {
         private ParameterMatcherFactory _factory;
 
-        [TestInitialize]
-        public void BeforeEachTest()
+        public ParameterMatcherFactoryTests()
         {
             _factory = new ParameterMatcherFactory();
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateMethodWithNoArgsReturnsExactMatcher()
         {
             Expression<Func<int>> expression = () => 10;
 
             var matcher = _factory.Create(expression);
 
-            Assert.IsInstanceOfType(matcher, typeof(ExactParameterMatcher));
+            Assert.IsType<ExactParameterMatcher>(matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateMethodWithParamPredicateArgReturnsPredicateMatcher()
         {
             Expression<Func<int>> expression = () => Param.Is<int>(p => p < 10);
 
             var matcher = _factory.Create(expression);
 
-            Assert.IsInstanceOfType(matcher, typeof(PredicateParameterMatcher));
+            Assert.IsType<PredicateParameterMatcher>(matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateMethodWithParamAnyArgReturnsAnyMatcher()
         {
             Expression<Func<int>> expression = () => Param.IsAny<int>();
 
             var matcher = _factory.Create(expression);
 
-            Assert.IsInstanceOfType(matcher, typeof(AnyParameterMatcher));
+            Assert.IsType<AnyParameterMatcher>(matcher);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateMethodWithParamRegexArgReturnsRegexMatcher()
         {
             Expression<Func<string>> expression = () => Param.IsRegex("^[0-9]{8}$");
 
             var matcher = _factory.Create(expression);
 
-            Assert.IsInstanceOfType(matcher, typeof(RegexParameterMatcher));
+            Assert.IsType<RegexParameterMatcher>(matcher);
         }
     }
 }

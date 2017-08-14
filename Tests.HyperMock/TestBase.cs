@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HyperMock;
-#if WINDOWS_UWP
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace Tests.HyperMock
 {
@@ -19,10 +14,7 @@ namespace Tests.HyperMock
     {
         private readonly Dictionary<Type, Mock> _mocks = new Dictionary<Type, Mock>();
         
-        protected TSubject Subject { get; private set; }
-
-        [TestInitialize]
-        public virtual void BeforeEachTest()
+        protected TestBase()
         {
             _mocks.Clear();
 
@@ -32,13 +24,15 @@ namespace Tests.HyperMock
             {
                 var method = typeof(Mock).GetMethod("Create", new[] { typeof(MockBehavior) });
                 var generic = method.MakeGenericMethod(ctorParam.ParameterType);
-                var mock = (Mock)generic.Invoke(this, new object[]{ MockBehavior.Loose});
+                var mock = (Mock)generic.Invoke(this, new object[] { MockBehavior.Loose });
 
                 _mocks.Add(ctorParam.ParameterType, mock);
             }
 
             Subject = (TSubject)ctor.Invoke(_mocks.Values.Select(m => m.Object).ToArray());
         }
+
+        protected TSubject Subject { get; }
 
         protected Mock<TInterface> MockFor<TInterface>() where TInterface : class
         {
