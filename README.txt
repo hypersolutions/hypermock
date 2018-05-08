@@ -6,8 +6,7 @@ Overview
 
 The project makes use of the VS shared project to enable windows and universal shared code. Both the HyperMock.Windows and HyperMock.Universal are empty. These both reference the HyperMock shared project. 
 
-The NuGet packages are built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the
-parent directory. 
+The NuGet packages are built from the HyperMock.Windows and HyperMock.Universal projects. The nuspec files reside in the parent directory. 
 
 
 Examples
@@ -23,8 +22,7 @@ Tests
 
 The tests use XUnit. This allows the common tests to work for both UWP and Desktop frameworks. Again, the tests reside in a shared project.
 
-A note of caution. These tests are picked up by the test explorer built into VS but you need to ensure that the default process arhcitecture 
-is set to match the build configuration othewise the UWP tests may not be listed.
+A note of caution. These tests are picked up by the test explorer built into VS but you need to ensure that the default process architecture is set to match the build configuration othewise the UWP tests may not be listed.
 
 
 Branches
