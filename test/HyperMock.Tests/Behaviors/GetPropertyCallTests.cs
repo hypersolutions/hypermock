@@ -40,7 +40,7 @@ namespace HyperMock.Tests.Behaviors
 
             _getPropertyCall.Returns(returnValue);
 
-            _getPropertyCall.SetupInfo.Value.ShouldBe(returnValue);
+            _getPropertyCall.SetupInfo.GetValue().ShouldBe(returnValue);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace HyperMock.Tests.Behaviors
 
             _getPropertyCall.Returns(() => returnValue);
 
-            _getPropertyCall.SetupInfo.Value.ShouldBeOfType<Func<int>>();
+            _getPropertyCall.SetupInfo.GetValue().ShouldBeOfType<Func<int>>();
         }
     }
 }

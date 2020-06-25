@@ -22,18 +22,20 @@ namespace HyperMock.Behaviors
         /// The mocked function returns this value.
         /// </summary>
         /// <param name="returnValue">Value to return</param>
-        public void Returns(TReturn returnValue)
+        public FunctionCall<TReturn> Returns(TReturn returnValue)
         {
-            SetupInfo.Value = returnValue;
+            SetupInfo.AddValue(returnValue);
+            return this;
         }
 
         /// <summary>
         /// The mocked function returns the resolved value at the point in which it is called.
         /// </summary>
         /// <param name="func">Func to call</param>
-        public void Returns(Func<TReturn> func)
+        public FunctionCall<TReturn> Returns(Func<TReturn> func)
         {
-            SetupInfo.Value = func;
+            SetupInfo.AddValue(func);
+            return this;
         }
 
         /// <summary>

@@ -54,9 +54,9 @@ namespace HyperMock.Core
 
         private static void BuildSetupResponse(SetupInfo setupInfo, DispatcherResponse response)
         {
-            dynamic value = setupInfo.Value;
+            dynamic value = setupInfo.GetValue();
 
-            response.ReturnValue = IsDeferredFunc(value) ? value() : setupInfo.Value;
+            response.ReturnValue = IsDeferredFunc(value) ? value() : value;
 
             var outAndRefParams = setupInfo.Parameters.Where(
                 p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);

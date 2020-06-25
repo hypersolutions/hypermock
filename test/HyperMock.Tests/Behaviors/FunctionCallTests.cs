@@ -42,7 +42,7 @@ namespace HyperMock.Tests.Behaviors
 
             _functionCall.Returns(returnValue);
 
-            _functionCall.SetupInfo.Value.ShouldBe(returnValue);
+            _functionCall.SetupInfo.GetValue().ShouldBe(returnValue);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace HyperMock.Tests.Behaviors
 
             _functionCall.Returns(() => returnValue);
 
-            _functionCall.SetupInfo.Value.ShouldBeOfType<Func<int>>();
+            _functionCall.SetupInfo.GetValue().ShouldBeOfType<Func<int>>();
         }
 
         [Fact]
