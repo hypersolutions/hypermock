@@ -12,7 +12,6 @@ REM 2. Build the Universal NuGet package...
 
 nuget.exe pack ../HyperMock.Universal.dll.nuspec
 
-
 REM 3. Build the Windows NuGet package...
 
 nuget.exe pack ../HyperMock.Windows.dll.nuspec

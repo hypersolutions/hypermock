@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HyperMock.Windows, Version=2.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HyperMock.Windows.2.0.7\lib\net40\HyperMock.Windows.dll</HintPath>
+    <Reference Include="HyperMock.Windows, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HyperMock.Windows.2.1.0\lib\net40\HyperMock.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

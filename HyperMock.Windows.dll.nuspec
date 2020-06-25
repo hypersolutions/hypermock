@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Hyperbolic Solutions simple mocking framework for unit testing</description>
     <releaseNotes>Added support for setup sequences.</releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <copyright>Copyright 2020</copyright>
     <tags>Windows Mocking Mock Unit Test UnitTesting</tags>
     <dependencies/>
   </metadata>
