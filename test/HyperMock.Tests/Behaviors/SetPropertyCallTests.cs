@@ -21,7 +21,7 @@ namespace HyperMock.Tests.Behaviors
         {
             _setPropertyCall.Throws<NotSupportedException>();
 
-            _setPropertyCall.SetupInfo.Exception.ShouldBeOfType<NotSupportedException>();
+            _setPropertyCall.SetupInfo.GetValue().Value.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace HyperMock.Tests.Behaviors
             
             _setPropertyCall.Throws(exception);
 
-            _setPropertyCall.SetupInfo.Exception.ShouldBe(exception);
+            _setPropertyCall.SetupInfo.GetValue().Value.ShouldBe(exception);
         }
 
         [Fact]

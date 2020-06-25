@@ -30,10 +30,6 @@ namespace HyperMock.Core
 
                 BuildDefaultResponse(method, response);
             }
-            else if (setupInfo.Exception != null)
-            {
-                response.Exception = setupInfo.Exception;
-            }
             else
             {
                 BuildSetupResponse(setupInfo, response);
@@ -54,17 +50,25 @@ namespace HyperMock.Core
 
         private static void BuildSetupResponse(SetupInfo setupInfo, DispatcherResponse response)
         {
-            dynamic value = setupInfo.GetValue();
+            var setupValue = setupInfo.GetValue();
 
-            response.ReturnValue = IsDeferredFunc(value) ? value() : value;
-
-            var outAndRefParams = setupInfo.Parameters.Where(
-                p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
-
-            foreach (var outAndRefParam in outAndRefParams)
+            if (setupValue?.IsException == true)
             {
-                var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
-                response.ReturnArgs[index] = outAndRefParam.Value;
+                response.Exception = (Exception)setupValue.Value;
+            }
+            else
+            {
+                dynamic value = setupValue?.Value;
+                response.ReturnValue = IsDeferredFunc(value) ? value() : value;
+
+                var outAndRefParams = setupInfo.Parameters.Where(
+                    p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
+
+                foreach (var outAndRefParam in outAndRefParams)
+                {
+                    var index = Array.IndexOf(setupInfo.Parameters, outAndRefParam);
+                    response.ReturnArgs[index] = outAndRefParam.Value;
+                }
             }
         }
 
@@ -72,7 +76,7 @@ namespace HyperMock.Core
         {
             if (value == null) return false;
 
-            Type valueType = value.GetType();
+            var valueType = value.GetType();
 
             return valueType.GetTypeInfo().IsGenericType &&
                    valueType.GetTypeInfo().GetGenericTypeDefinition() == typeof(Func<>);

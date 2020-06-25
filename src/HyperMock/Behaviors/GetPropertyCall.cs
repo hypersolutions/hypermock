@@ -52,7 +52,7 @@ namespace HyperMock.Behaviors
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
             
-            SetupInfo.Exception = exception;
+            SetupInfo.AddException(exception);
         }
     }
 }

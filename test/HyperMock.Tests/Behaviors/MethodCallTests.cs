@@ -22,7 +22,7 @@ namespace HyperMock.Tests.Behaviors
         {
             _methodCall.Throws<NotSupportedException>();
 
-            _methodCall.SetupInfo.Exception.ShouldBeOfType<NotSupportedException>();
+            _methodCall.SetupInfo.GetValue().Value.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace HyperMock.Tests.Behaviors
             
             _methodCall.Throws(exception);
 
-            _methodCall.SetupInfo.Exception.ShouldBe(exception);
+            _methodCall.SetupInfo.GetValue().Value.ShouldBe(exception);
         }
 
         [Fact]

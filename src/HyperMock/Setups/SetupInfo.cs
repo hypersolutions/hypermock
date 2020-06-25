@@ -6,23 +6,39 @@ namespace HyperMock.Setups
 {
     internal sealed class SetupInfo
     {
-        private readonly List<object> _values = new List<object>();
+        private readonly List<SetupValue> _values = new List<SetupValue>();
         private int _valuePointer;
         
         internal string Name { get; set; }
         
         internal Parameter[] Parameters { get; set; }
         
-        internal Exception Exception { get; set; }
-
         internal void AddValue(object value)
         {
-            _values.Add(value);
+            _values.Add(new SetupValue(value));
         }
 
-        internal object GetValue()
+        internal void AddException(Exception value)
+        {
+            _values.Add(new SetupValue(value, true));
+        }
+        
+        internal SetupValue GetValue()
         {
             return _values.Count > 0 ? _values[_valuePointer++ % _values.Count] : null;
         }
+    }
+
+    internal sealed class SetupValue
+    {
+        internal SetupValue(object value, bool isException = false)
+        {
+            Value = value;
+            IsException = isException;
+        }
+        
+        internal object Value { get; }
+        
+        internal bool IsException { get; }
     }
 }

@@ -22,7 +22,7 @@ namespace HyperMock.Tests.Behaviors
         {
             _functionCall.Throws<NotSupportedException>();
 
-            _functionCall.SetupInfo.Exception.ShouldBeOfType<NotSupportedException>();
+            _functionCall.SetupInfo.GetValue().Value.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace HyperMock.Tests.Behaviors
 
             _functionCall.Throws(exception);
 
-            _functionCall.SetupInfo.Exception.ShouldBe(exception);
+            _functionCall.SetupInfo.GetValue().Value.ShouldBe(exception);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace HyperMock.Tests.Behaviors
 
             _functionCall.Returns(returnValue);
 
-            _functionCall.SetupInfo.GetValue().ShouldBe(returnValue);
+            _functionCall.SetupInfo.GetValue().Value.ShouldBe(returnValue);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace HyperMock.Tests.Behaviors
 
             _functionCall.Returns(() => returnValue);
 
-            _functionCall.SetupInfo.GetValue().ShouldBeOfType<Func<int>>();
+            _functionCall.SetupInfo.GetValue().Value.ShouldBeOfType<Func<int>>();
         }
 
         [Fact]
