@@ -21,5 +21,23 @@ namespace Tests.HyperMock.Integration
 
             Assert.Throws<NotSupportedException>(() => Subject.HasAccounts());
         }
+
+        [Fact]
+        public void SetupReturnsTrueThenFalseOnlySubsequentCalls()
+        {
+            MockFor<IAccountService>().SetupGet(s => s.HasAccounts).Returns(true).Returns(false);
+
+            Assert.True(Subject.HasAccounts());
+            Assert.False(Subject.HasAccounts());
+        }
+
+        [Fact]
+        public void SetupThrowsExceptionOnSecondCall()
+        {
+            MockFor<IAccountService>().SetupGet(s => s.HasAccounts).Returns(true).Throws(new Exception());
+
+            Assert.True(Subject.HasAccounts());
+            Assert.Throws<Exception>(() => Subject.HasAccounts());
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace Tests.HyperMock.Behaviors
         {
             _setPropertyCall.Throws<NotSupportedException>();
 
-            Assert.IsType<NotSupportedException>(_setPropertyCall.SetupInfo.Exception);
+            Assert.IsType<NotSupportedException>(_setPropertyCall.SetupInfo.GetValue().Value);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace Tests.HyperMock.Behaviors
             var exception = new NotSupportedException();
             _setPropertyCall.Throws(exception);
 
-            Assert.Equal(exception, _setPropertyCall.SetupInfo.Exception);
+            Assert.Equal(exception, _setPropertyCall.SetupInfo.GetValue().Value);
         }
 
         [Fact]

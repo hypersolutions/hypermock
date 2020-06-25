@@ -165,5 +165,18 @@ namespace Tests.HyperMock.Integration
 
             MockFor<IAccountService>().Verify(s => s.Debit(info.Number, info.DebitAmount), Occurred.Once());
         }
+
+        [Fact]
+        public void SetupOnlyDebitsAccountOnce()
+        {
+            var info = new AccountInfo { Number = "12345678", DebitAmount = 100 };
+            MockFor<IAccountService>().Setup(
+                s => s.CanDebit(info.Number, info.DebitAmount)).Returns(true).Returns(false);
+
+            Subject.Debit(info);
+            Subject.Debit(info);
+
+            MockFor<IAccountService>().Verify(s => s.Debit(info.Number, info.DebitAmount), Occurred.Once());
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace Tests.HyperMock.Behaviors
         {
             _methodCall.Throws<NotSupportedException>();
 
-            Assert.IsType<NotSupportedException>(_methodCall.SetupInfo.Exception);
+            Assert.IsType<NotSupportedException>(_methodCall.SetupInfo.GetValue().Value);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Tests.HyperMock.Behaviors
             var exception = new NotSupportedException();
             _methodCall.Throws(exception);
 
-            Assert.Equal(exception, _methodCall.SetupInfo.Exception);
+            Assert.Equal(exception, _methodCall.SetupInfo.GetValue().Value);
         }
 
         [Fact]

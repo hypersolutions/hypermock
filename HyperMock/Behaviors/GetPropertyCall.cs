@@ -19,18 +19,20 @@ namespace HyperMock.Behaviors
         /// The mocked type property returns this value.
         /// </summary>
         /// <param name="returnValue">Value to return</param>
-        public void Returns(TReturn returnValue)
+        public GetPropertyCall<TReturn> Returns(TReturn returnValue)
         {
-            SetupInfo.Value = returnValue;
+            SetupInfo.AddValue(returnValue);
+            return this;
         }
 
         /// <summary>
         /// The mocked get property returns the resolved value at the point in which it is called.
         /// </summary>
         /// <param name="func">Func to call</param>
-        public void Returns(Func<TReturn> func)
+        public GetPropertyCall<TReturn> Returns(Func<TReturn> func)
         {
-            SetupInfo.Value = func;
+            SetupInfo.AddValue(func);
+            return this;
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace HyperMock.Behaviors
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
             
-            SetupInfo.Exception = exception;
+            SetupInfo.AddException(exception);
         }
     }
 }
