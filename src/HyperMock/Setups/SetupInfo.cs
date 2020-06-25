@@ -28,17 +28,4 @@ namespace HyperMock.Setups
             return _values.Count > 0 ? _values[_valuePointer++ % _values.Count] : null;
         }
     }
-
-    internal sealed class SetupValue
-    {
-        internal SetupValue(object value, bool isException = false)
-        {
-            Value = value;
-            IsException = isException;
-        }
-        
-        internal object Value { get; }
-        
-        internal bool IsException { get; }
-    }
 }
