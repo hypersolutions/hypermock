@@ -1,5 +1,3 @@
-**IN PROGRESS - AWATING UWP SDK TO MOVE TO SUPPORT NET STANDARD 2.1**
-
 # HyperMock
 
 ## Getting Started
@@ -20,23 +18,21 @@ The original motivation for this library was to bridge a much needed gap within 
 
 The API has been designed to be familiar so should be fairly straight-forward to use.
 
-The library targets .NET standard 2.1 so this means that version 3.0.0 onwards will only work for Windows 10 SDK 19041+. The previous _HyperMock.Universal_ still 
-exists, although will only be maintained for minimal support purposes.
-
-The advantage of now supporting .NET Standard 2.1 is that there is one library which simplifies development, maintenance and testing.
+The library targets .NET 5.0 for version 3.0.0 onwards. The previous _HyperMock.Universal_ still exists, although will only be maintained for minimal support purposes.
 
 **Please note** that the documentation below is not exhaustive and more can be found [here](https://github.com/hypersolutions/hypermock/wiki).
+
 ### Creating a mock
 
 To create a mock instance, simply call the _Mock.Create<T>_ static class:
 
-```
+```c#
 var mockService = Mock.Create<IAccountService>();
 ```
 
 This returns back an instance the _Mock_ class that contains all the setup and verify extensions. It also contains the mocked instance. You can pass this into your class:
 
-```
+```c#
 var controller = new AccountController(mockService.Object);
 ```
 
@@ -46,7 +42,7 @@ The framework allows for both setup of behaviors and verifying that things occur
 
 Below shows a simple example where an account is credited with an amount and the underlying service was called once:
 
-```
+```c#
 [TestMethod]
 public void CreditAddsToAccount()
 {
@@ -62,7 +58,7 @@ public void CreditAddsToAccount()
 
 The _Occurred_ class supports a variety of options. For example, below shows that given an invalid amount expected, the service call is never performed:
 
-```
+```c#
 [TestMethod]
 public void CreditFailsWithUnknownAmount()
 {
@@ -78,7 +74,7 @@ public void CreditFailsWithUnknownAmount()
 
 You can control the mock calls by using the _Setup_ method and its functionality. Below we setup the _Credit_ call on the service to throw an exception if the credit amount is below £1:
 
-```
+```c#
 [TestMethod, ExpectedException(typeof(NotSupportedException))]
 public void CreditWithInvalidAmountThrowsException()
 {
@@ -95,7 +91,7 @@ As you can see, the _Controller.Credit_ call throws the appropriate exception wh
 
 The above example uses the _Param_ class. In that example, you can see that it applies a predicate to deciding to throw an exception. This can also be extended to verify calls to:
 
-```
+```c#
 [TestMethod]
 public void CreditWithAmountAboveMin()
 {
@@ -111,7 +107,7 @@ public void CreditWithAmountAboveMin()
 
 So in this example the _Credit_ call was made but in the one below:
 
-```
+```c#
 [TestMethod]
 public void CreditFailsWithAmountBelowMin()
 {
