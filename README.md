@@ -22,7 +22,7 @@ The library targets .NET 5.0 for version 3.0.0 onwards. The previous _HyperMock.
 
 **Please note** that the documentation below is not exhaustive and more can be found [here](https://github.com/hypersolutions/hypermock/wiki).
 
-### Creating a mock
+### Creating a Mock
 
 To create a mock instance, simply call the _Mock.Create<T>_ static class:
 
