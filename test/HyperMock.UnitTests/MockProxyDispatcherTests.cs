@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using HyperMock.Tests.Support;
+using HyperMock.UnitTests.Support;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests
+namespace HyperMock.UnitTests
 {
     public class MockProxyDispatcherTests
     {

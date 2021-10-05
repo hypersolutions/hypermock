@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{59DFCA2B-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperMock", "src\HyperMock\HyperMock.csproj", "{F0A19CF5-6808-4F36-BAC5-D03E13B7AB47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperMock.Tests", "test\HyperMock.Tests\HyperMock.Tests.csproj", "{20228694-B636-44F2-86A2-946F02F141E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperMock.UnitTests", "test\HyperMock.UnitTests\HyperMock.UnitTests.csproj", "{20228694-B636-44F2-86A2-946F02F141E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMock.IntTests", "test\HyperMock.IntTests\HyperMock.IntTests.csproj", "{D3802772-7029-4AB2-9862-4A04D5456334}"
 EndProject

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HyperMock.Tests
+namespace HyperMock.UnitTests
 {
     /// <summary>
     /// Helper base class that provides automatic initialisation of mock dependencies.

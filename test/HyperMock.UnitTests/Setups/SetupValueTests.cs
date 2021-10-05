@@ -3,7 +3,7 @@ using HyperMock.Setups;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Setups
+namespace HyperMock.UnitTests.Setups
 {
     public class SetupValueTests
     {

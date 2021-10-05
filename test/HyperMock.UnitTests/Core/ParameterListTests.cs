@@ -6,7 +6,7 @@ using HyperMock.Matchers;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Core
+namespace HyperMock.UnitTests.Core
 {
     public class ParameterListTests
     {

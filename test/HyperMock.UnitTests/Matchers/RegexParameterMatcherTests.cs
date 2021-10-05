@@ -3,9 +3,10 @@ using System.Linq.Expressions;
 using HyperMock.Matchers;
 using Shouldly;
 using Xunit;
+
 // ReSharper disable MemberCanBeMadeStatic.Local
 
-namespace HyperMock.Tests.Matchers
+namespace HyperMock.UnitTests.Matchers
 {
     public class RegexParameterMatcherTests
     {

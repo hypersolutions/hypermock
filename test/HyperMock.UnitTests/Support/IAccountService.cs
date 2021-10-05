@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿
+
 // ReSharper disable UnusedParameter.Global
 
-namespace HyperMock.Tests.Support
+namespace HyperMock.UnitTests.Support
 {
     public interface IAccountService
     {

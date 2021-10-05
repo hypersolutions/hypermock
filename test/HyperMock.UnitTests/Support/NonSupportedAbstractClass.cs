@@ -1,4 +1,4 @@
-﻿namespace HyperMock.Tests.Support
+﻿namespace HyperMock.UnitTests.Support
 {
     public abstract class NonSupportedAbstractClass
     {

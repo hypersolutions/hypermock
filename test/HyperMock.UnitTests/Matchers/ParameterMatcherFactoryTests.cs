@@ -4,7 +4,7 @@ using HyperMock.Matchers;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Matchers
+namespace HyperMock.UnitTests.Matchers
 {
     public class ParameterMatcherFactoryTests
     {

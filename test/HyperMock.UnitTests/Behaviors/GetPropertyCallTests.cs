@@ -4,7 +4,7 @@ using HyperMock.Setups;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Behaviors
+namespace HyperMock.UnitTests.Behaviors
 {
     public class GetPropertyCallTests
     {

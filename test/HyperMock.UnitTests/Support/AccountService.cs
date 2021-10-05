@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HyperMock.Tests.Support
+namespace HyperMock.UnitTests.Support
 {
     public class AccountService : IAccountService
     {

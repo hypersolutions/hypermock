@@ -4,11 +4,12 @@ using HyperMock.Core;
 using HyperMock.Setups;
 using Shouldly;
 using Xunit;
+
 // ReSharper disable UnusedParameter.Local
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBeMadeStatic.Local
 
-namespace HyperMock.Tests.Setups
+namespace HyperMock.UnitTests.Setups
 {
     public class SetupInfoListTests
     {

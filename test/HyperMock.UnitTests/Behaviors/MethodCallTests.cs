@@ -6,181 +6,161 @@ using HyperMock.Setups;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Behaviors
+namespace HyperMock.UnitTests.Behaviors
 {
-    public class FunctionCallTests
+    public class MethodCallTests
     {
-        private readonly FunctionCall<int> _functionCall;
+        private readonly MethodCall _methodCall;
 
-        public FunctionCallTests()
+        public MethodCallTests()
         {
-            _functionCall = new FunctionCall<int>(new SetupInfo());
+            _methodCall = new MethodCall(new SetupInfo());
         }
 
         [Fact]
         public void ThrowsAttachesExceptionTypeToSetup()
         {
-            _functionCall.Throws<NotSupportedException>();
+            _methodCall.Throws<NotSupportedException>();
 
-            _functionCall.SetupInfo.GetValue().Value.ShouldBeOfType<NotSupportedException>();
+            _methodCall.SetupInfo.GetValue().Value.ShouldBeOfType<NotSupportedException>();
         }
 
         [Fact]
         public void ThrowsAttachesExceptionInstanceToSetup()
         {
             var exception = new NotSupportedException();
+            
+            _methodCall.Throws(exception);
 
-            _functionCall.Throws(exception);
-
-            _functionCall.SetupInfo.GetValue().Value.ShouldBe(exception);
-        }
-
-        [Fact]
-        public void ReturnsAttachesValueToSetup()
-        {
-            const int returnValue = 10;
-
-            _functionCall.Returns(returnValue);
-
-            _functionCall.SetupInfo.GetValue().Value.ShouldBe(returnValue);
-        }
-
-        [Fact]
-        public void ReturnsAttachesDeferredFuncToSetup()
-        {
-            const int returnValue = 0;
-
-            _functionCall.Returns(() => returnValue);
-
-            _functionCall.SetupInfo.GetValue().Value.ShouldBeOfType<Func<int>>();
+            _methodCall.SetupInfo.GetValue().Value.ShouldBe(exception);
         }
 
         [Fact]
         public void WithOutArgsReturnsSelf()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Out}
             };
 
-            var self = _functionCall.WithOutArgs(10);
+            var self = _methodCall.WithOutArgs(10);
 
-            _functionCall.ShouldBe(self);
+            _methodCall.ShouldBe(self);
         }
 
         [Fact]
         public void WithOutArgsAttachesSingleValueToOutParameter()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutArgs(10);
+            _methodCall.WithOutArgs(10);
 
-            _functionCall.SetupInfo.Parameters[0].Value.ShouldBe(10);
+            _methodCall.SetupInfo.Parameters[0].Value.ShouldBe(10);
         }
 
         [Fact]
         public void WithOutArgsAttachesSingleValueToCorrectOutParameter()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Out}
             };
 
-            _functionCall.WithOutArgs(10);
+            _methodCall.WithOutArgs(10);
 
-            _functionCall.SetupInfo.Parameters[1].Value.ShouldBe(10);
+            _methodCall.SetupInfo.Parameters[1].Value.ShouldBe(10);
         }
 
         [Fact]
         public void WithOutArgsThrowsExceptionForNoParameterProvided()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Out}
             };
-
-            Should.Throw<MockException>(() => _functionCall.WithOutArgs());
+            
+            Should.Throw<MockException>(() => _methodCall.WithOutArgs());
         }
 
         [Fact]
         public void WithOutArgsThrowsExceptionForMoreParametersProvided()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Out}
             };
 
-            Should.Throw<MockException>(() => _functionCall.WithOutArgs(10, 20));
+            Should.Throw<MockException>(() => _methodCall.WithOutArgs(10, 20));
         }
 
         [Fact]
         public void WithRefArgsReturnsSelf()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Ref}
             };
 
-            var self = _functionCall.WithRefArgs(10);
+            var self = _methodCall.WithRefArgs(10);
 
-            _functionCall.ShouldBe(self);
+            _methodCall.ShouldBe(self);
         }
 
         [Fact]
         public void WithRefArgsAttachesSingleValueToRefParameter()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.Ref}
             };
 
-            _functionCall.WithRefArgs(10);
+            _methodCall.WithRefArgs(10);
 
-            _functionCall.SetupInfo.Parameters[0].Value.ShouldBe(10);
+            _methodCall.SetupInfo.Parameters[0].Value.ShouldBe(10);
         }
 
         [Fact]
         public void WithRefArgsAttachesSingleValueToCorrectRefParameter()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Ref}
             };
 
-            _functionCall.WithRefArgs(10);
+            _methodCall.WithRefArgs(10);
 
-            _functionCall.SetupInfo.Parameters[1].Value.ShouldBe(10);
+            _methodCall.SetupInfo.Parameters[1].Value.ShouldBe(10);
         }
 
         [Fact]
         public void WithRefArgsThrowsExceptionForNoParameterProvided()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Ref}
             };
             
-            Should.Throw<MockException>(() => _functionCall.WithRefArgs());
+            Should.Throw<MockException>(() => _methodCall.WithRefArgs());
         }
 
         [Fact]
         public void WithRefArgsThrowsExceptionForMoreParametersProvided()
         {
-            _functionCall.SetupInfo.Parameters = new[]
+            _methodCall.SetupInfo.Parameters = new[]
             {
                 new Parameter {Type = ParameterType.In},
                 new Parameter {Type = ParameterType.Ref}
             };
 
-            Should.Throw<MockException>(() => _functionCall.WithRefArgs(10, 20));
+            Should.Throw<MockException>(() => _methodCall.WithRefArgs(10, 20));
         }
     }
 }

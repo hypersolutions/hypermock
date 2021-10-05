@@ -3,7 +3,7 @@ using HyperMock.Exceptions;
 using Shouldly;
 using Xunit;
 
-namespace HyperMock.Tests.Core
+namespace HyperMock.UnitTests.Core
 {
     public class CountOrMoreOccurredTests
     {

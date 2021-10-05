@@ -4,10 +4,11 @@ using System.Reflection;
 using HyperMock.Core;
 using Shouldly;
 using Xunit;
+
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBeMadeStatic.Local
 
-namespace HyperMock.Tests.Core
+namespace HyperMock.UnitTests.Core
 {
     public class VisitListTests
     {
