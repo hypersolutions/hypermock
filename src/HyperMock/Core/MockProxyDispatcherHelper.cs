@@ -62,7 +62,7 @@ namespace HyperMock.Core
                 response.ReturnValue = IsDeferredFunc(value) ? value() : value;
 
                 var outAndRefParams = setupInfo.Parameters.Where(
-                    p => p.Type == ParameterType.Out || p.Type == ParameterType.Ref);
+                    p => p.Type is ParameterType.Out or ParameterType.Ref);
 
                 foreach (var outAndRefParam in outAndRefParams)
                 {

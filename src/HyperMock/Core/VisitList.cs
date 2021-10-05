@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,8 +8,6 @@ namespace HyperMock.Core
 {
     public class VisitList
     {
-        private readonly ParameterList _parameterList = new ParameterList();
-
         internal VisitList()
         {
             RecordedVisits = new List<Visit>();
@@ -20,7 +19,7 @@ namespace HyperMock.Core
 
         internal Visit Record(MethodBase method, object[] args)
         {
-            var parameters = _parameterList.BuildFrom(method, args);
+            var parameters = ParameterList.BuildFrom(method, args);
 
             var visit = RecordedVisits.FirstOrDefault(
                 v => v.Name == method.Name && IsMatchFor(v.Parameters, parameters));
@@ -51,9 +50,11 @@ namespace HyperMock.Core
                     return FindGetPropertyVisits(expression, values);
                 case CallType.SetProperty:
                     return FindSetPropertyVisits(expression, values);
+                case CallType.Event:
+                    return Array.Empty<Visit>();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(callType), callType, null);
             }
-
-            return new Visit[0];
         }
 
         internal void Reset()
@@ -63,27 +64,23 @@ namespace HyperMock.Core
 
         private Visit[] FindMethodVisits(LambdaExpression expression)
         {
-            var body = expression.Body as MethodCallExpression;
-
-            if (body == null) return null;
+            if (expression.Body is not MethodCallExpression body) return null;
 
             var matchingVisitationsByName = RecordedVisits.Where(v => v.Name == body.Method.Name).ToList();
 
-            if (!matchingVisitationsByName.Any()) return new Visit[0];
-
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(body, expression);
+            if (!matchingVisitationsByName.Any()) return Array.Empty<Visit>();
+            
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             return matchingVisitationsByName.Where(
-                v => parameterList.IsMatchFor(parameters, v.Parameters.Select(p => p.Value).ToArray())).ToArray();
+                v => ParameterList.IsMatchFor(parameters, v.Parameters.Select(p => p.Value).ToArray())).ToArray();
         }
 
         private Visit[] FindGetPropertyVisits(LambdaExpression expression, object[] values = null)
         {
-            var body = expression.Body as MemberExpression;
             MethodInfo getMethodInfo;
 
-            if (body == null)
+            if (expression.Body is not MemberExpression body)
             {
                 var indexerBody = expression.Body as MethodCallExpression;
                 getMethodInfo = indexerBody?.Method;
@@ -94,12 +91,11 @@ namespace HyperMock.Core
                 getMethodInfo = propInfo.GetMethod;
             }
 
-            if (getMethodInfo == null) return new Visit[0];
+            if (getMethodInfo == null) return Array.Empty<Visit>();
 
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(getMethodInfo, values);
+            var parameters = ParameterList.BuildFrom(getMethodInfo, values);
 
-            if (values != null && values.Length > 0)
+            if (values is { Length: > 0 })
                 return RecordedVisits.Where(
                     v => v.Name == getMethodInfo.Name && IsMatchFor(v.Parameters, parameters)).ToArray();
 
@@ -108,10 +104,9 @@ namespace HyperMock.Core
 
         private Visit[] FindSetPropertyVisits(LambdaExpression expression, object[] values = null)
         {
-            var body = expression.Body as MemberExpression;
             MethodInfo setMethodInfo;
 
-            if (body == null)
+            if (expression.Body is not MemberExpression body)
             {
                 var indexerBody = expression.Body as MethodCallExpression;
                 setMethodInfo = indexerBody?.Method;
@@ -122,15 +117,14 @@ namespace HyperMock.Core
                 setMethodInfo = propInfo.SetMethod;
             }
 
-            if (setMethodInfo == null) return new Visit[0];
+            if (setMethodInfo == null) return Array.Empty<Visit>();
 
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(setMethodInfo, values);
+            var parameters = ParameterList.BuildFrom(setMethodInfo, values);
 
             // Special case! The way the mock is setup means that for sets the method may come through as a get!
             var name = setMethodInfo.Name.Replace("get_Item", "set_Item");
 
-            if (values != null && values.Length > 0)
+            if (values is { Length: > 0 })
                 return RecordedVisits.Where(
                     v => v.Name == name && IsMatchFor(v.Parameters, parameters)).ToArray();
 

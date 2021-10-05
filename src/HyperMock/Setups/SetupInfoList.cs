@@ -9,7 +9,7 @@ namespace HyperMock.Setups
 {
     public sealed class SetupInfoList
     {
-        private readonly List<SetupInfo> _setupInfoList = new List<SetupInfo>();
+        private readonly List<SetupInfo> _setupInfoList = new();
 
         internal IEnumerable<SetupInfo> InfoList => _setupInfoList;
 
@@ -24,15 +24,15 @@ namespace HyperMock.Setups
                 case CallType.Function:
                 case CallType.Method:
                     return AddOrGetMethod(expression);
+                case CallType.Event:
+                    throw new NotSupportedException();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(callType), callType, null);
             }
-
-            throw new NotSupportedException();
         }
 
         internal SetupInfo FindBy(string name, object[] args)
         {
-            var parameterList = new ParameterList();
-
             foreach (var setupInfo in _setupInfoList.Where(d => d.Name == name))
             {
                 // Find all the in params to match against
@@ -51,7 +51,7 @@ namespace HyperMock.Setups
                 var inArgs = new object[parameters.Length];
                 Array.Copy(args, 0, inArgs, 0, inArgs.Length);
 
-                if (parameterList.IsMatchFor(parameters, inArgs))
+                if (ParameterList.IsMatchFor(parameters, inArgs))
                     return setupInfo;
             }
 
@@ -79,8 +79,7 @@ namespace HyperMock.Setups
                 throw new ArgumentException("Expression refers to property or indexer with no getter.");
 
 
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(methodCall, expression);
+            var parameters = ParameterList.BuildFrom(methodCall, expression);
 
             var matchedSetupInfo = FindSetupInfo(getMethodInfo.Name, parameters);
 
@@ -114,8 +113,7 @@ namespace HyperMock.Setups
             // Special case! The way the mock is setup means that for sets the method may come through as a get!
             var name = setMethodInfo.Name.Replace("get_Item", "set_Item");
 
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(methodCall, expression);
+            var parameters = ParameterList.BuildFrom(methodCall, expression);
 
             var matchedSetupInfo = FindSetupInfo(name, parameters);
 
@@ -128,13 +126,10 @@ namespace HyperMock.Setups
 
         private SetupInfo AddOrGetMethod(LambdaExpression expression)
         {
-            var body = expression.Body as MethodCallExpression;
-
-            if (body == null)
+            if (expression.Body is not MethodCallExpression body)
                 throw new ArgumentException("Expression body is not a MethodCallExpression.");
 
-            var parameterList = new ParameterList();
-            var parameters = parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             var matchedSetupInfo = FindSetupInfo(body.Method.Name, parameters);
 

@@ -24,12 +24,10 @@ namespace HyperMock.Core
 
             // Find the event record (if exists) for the event with an attached handler
             var eventRecord = recordedVisits.FirstOrDefault(
-                v => v.Name == lastEventRecord.Name && v.Parameters != null && v.Parameters.Length == 1);
-
-            var eventHandler = eventRecord?.Parameters[0].Value as Delegate;
+                v => v.Name == lastEventRecord.Name && v.Parameters is { Length: 1 });
 
             // No event handler attached (or found) don't bother continuing
-            if (eventHandler == null) return;
+            if (eventRecord?.Parameters[0].Value is not Delegate eventHandler) return;
 
             // Run through each attached handler and invoke the event
             foreach (var attachedHandler in eventHandler.GetInvocationList())

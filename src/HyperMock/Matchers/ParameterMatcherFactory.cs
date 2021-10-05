@@ -4,15 +4,14 @@ using HyperMock.Core;
 
 namespace HyperMock.Matchers
 {
-    internal class ParameterMatcherFactory
+    internal static class ParameterMatcherFactory
     {
-        internal ParameterMatcher Create(LambdaExpression expression)
+        internal static ParameterMatcher Create(LambdaExpression expression)
         {
             var methodCall = expression.Body as MethodCallExpression;
 
             // Find the parameter matcher attribute (if exists)
-            var methodCallHelper = new MethodCallHelper();
-            var paramMatcherAttr = methodCallHelper.GetCustomAttribute<ParameterMatcherAttribute>(methodCall);
+            var paramMatcherAttr = MethodCallHelper.GetCustomAttribute<ParameterMatcherAttribute>(methodCall);
 
             // If exists then create the matcher else return the exact matcher
             return paramMatcherAttr != null 
@@ -20,12 +19,12 @@ namespace HyperMock.Matchers
                 : new ExactParameterMatcher();
         }
 
-        private ParameterMatcher CreateFromExpression(Type paramMatcherType, LambdaExpression expression)
+        private static ParameterMatcher CreateFromExpression(Type paramMatcherType, LambdaExpression expression)
         {
             var methodCall = (MethodCallExpression)expression.Body;
 
             var matcher = (ParameterMatcher)Activator.CreateInstance(paramMatcherType);
-            matcher.CallContext = methodCall;
+            matcher!.CallContext = methodCall;
             return matcher;
         }
     }

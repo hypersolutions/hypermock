@@ -45,7 +45,7 @@ namespace HyperMock.Tests.Behaviors
         [Fact]
         public void SetValueAttachesExactMatchArgToSetup()
         {
-            var value = 10;
+            const int value = 10;
 
             _setPropertyCall.SetValue(value);
 

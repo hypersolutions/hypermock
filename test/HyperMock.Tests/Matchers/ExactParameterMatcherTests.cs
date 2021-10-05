@@ -1,6 +1,8 @@
 ﻿using HyperMock.Matchers;
 using Shouldly;
 using Xunit;
+// ReSharper disable ConvertToConstant.Local
+// ReSharper disable InlineTemporaryVariable
 
 namespace HyperMock.Tests.Matchers
 {

@@ -10,13 +10,6 @@ namespace HyperMock.Tests.Core
 {
     public class ParameterListTests
     {
-        private readonly ParameterList _parameterList;
-
-        public ParameterListTests()
-        {
-            _parameterList = new ParameterList();
-        }
-
         [Fact]
         public void IsMatchForReturnsFalseForExactMatchOnArg()
         {
@@ -25,7 +18,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 10, Matcher = new ExactParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 100);
+            var isMatch = ParameterList.IsMatchFor(parameters, 100);
 
             isMatch.ShouldBeFalse();
         }
@@ -38,7 +31,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 10, Matcher = new ExactParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 10);
+            var isMatch = ParameterList.IsMatchFor(parameters, 10);
 
             isMatch.ShouldBeTrue();
         }
@@ -52,7 +45,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 20, Matcher = new ExactParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 100, 200);
+            var isMatch = ParameterList.IsMatchFor(parameters, 100, 200);
 
             isMatch.ShouldBeFalse();
         }
@@ -66,7 +59,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 20, Matcher = new ExactParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 10, 20);
+            var isMatch = ParameterList.IsMatchFor(parameters, 10, 20);
 
             isMatch.ShouldBeTrue();
         }
@@ -79,7 +72,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 10, Matcher = new AnyParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 100);
+            var isMatch = ParameterList.IsMatchFor(parameters, 100);
 
             isMatch.ShouldBeTrue();
         }
@@ -93,7 +86,7 @@ namespace HyperMock.Tests.Core
                 new Parameter {Value = 20, Matcher = new AnyParameterMatcher()}
             };
 
-            var isMatch = _parameterList.IsMatchFor(parameters, 100, 200);
+            var isMatch = ParameterList.IsMatchFor(parameters, 100, 200);
 
             isMatch.ShouldBeTrue();
         }
@@ -104,7 +97,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod();
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters.Length.ShouldBe(0);
         }
@@ -114,7 +107,7 @@ namespace HyperMock.Tests.Core
         {
             Expression<Action> expression = () => TestMethod();
 
-            var parameters = _parameterList.BuildFrom(null, expression);
+            var parameters = ParameterList.BuildFrom(null, expression);
 
             parameters.Length.ShouldBe(0);
         }
@@ -125,7 +118,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters.Length.ShouldBe(2);
         }
@@ -136,7 +129,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Value.ShouldBe(10);
             parameters[1].Value.ShouldBe(20);
@@ -148,7 +141,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Matcher.ShouldBeOfType<ExactParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -160,7 +153,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod2(Param.IsAny<int>(), 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Matcher.ShouldBeOfType<AnyParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -173,7 +166,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod3(ref text);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Type.ShouldBe(ParameterType.Ref);
         }
@@ -184,7 +177,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction();
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters.Length.ShouldBe(0);
         }
@@ -195,7 +188,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters.Length.ShouldBe(2);
         }
@@ -206,7 +199,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Value.ShouldBe(10);
             parameters[1].Value.ShouldBe(20);
@@ -218,7 +211,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Matcher.ShouldBeOfType<ExactParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -230,7 +223,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction2(10, 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Type.ShouldBe(ParameterType.In);
             parameters[1].Type.ShouldBe(ParameterType.In);
@@ -243,7 +236,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<bool>> expression = () => TryTestFunction("test", out x);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Type.ShouldBe(ParameterType.In);
             parameters[1].Type.ShouldBe(ParameterType.Out);
@@ -255,7 +248,7 @@ namespace HyperMock.Tests.Core
             Expression<Func<int>> expression = () => TestFunction2(Param.IsAny<int>(), 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Matcher.ShouldBeOfType<AnyParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -267,7 +260,7 @@ namespace HyperMock.Tests.Core
             Expression<Action> expression = () => TestMethod2(Param.Is<int>(p => p > 10 && p < 20), 20);
             var body = expression.Body as MethodCallExpression;
 
-            var parameters = _parameterList.BuildFrom(body, expression);
+            var parameters = ParameterList.BuildFrom(body, expression);
 
             parameters[0].Matcher.ShouldBeOfType<PredicateParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -278,7 +271,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod");
             
-            var parameters = _parameterList.BuildFrom(method);
+            var parameters = ParameterList.BuildFrom(method);
 
             parameters.Length.ShouldBe(0);
         }
@@ -288,7 +281,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod2");
             
-            var parameters = _parameterList.BuildFrom(method, 10, 20);
+            var parameters = ParameterList.BuildFrom(method, 10, 20);
 
             parameters.Length.ShouldBe(2);
         }
@@ -298,7 +291,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod2");
 
-            var parameters = _parameterList.BuildFrom(method, 10, 20);
+            var parameters = ParameterList.BuildFrom(method, 10, 20);
 
             parameters[0].Value.ShouldBe(10);
             parameters[1].Value.ShouldBe(20);
@@ -309,7 +302,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod2");
 
-            var parameters = _parameterList.BuildFrom(method, 10, 20);
+            var parameters = ParameterList.BuildFrom(method, 10, 20);
 
             parameters[0].Type.ShouldBe(ParameterType.In);
             parameters[1].Type.ShouldBe(ParameterType.In);
@@ -320,7 +313,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod2");
 
-            var parameters = _parameterList.BuildFrom(method, 10, 20);
+            var parameters = ParameterList.BuildFrom(method, 10, 20);
 
             parameters[0].Matcher.ShouldBeOfType<ExactParameterMatcher>();
             parameters[1].Matcher.ShouldBeOfType<ExactParameterMatcher>();
@@ -331,7 +324,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TryTestFunction");
 
-            var parameters = _parameterList.BuildFrom(method, "test", 0);
+            var parameters = ParameterList.BuildFrom(method, "test", 0);
 
             parameters[0].Type.ShouldBe(ParameterType.In);
             parameters[1].Type.ShouldBe(ParameterType.Out);
@@ -342,7 +335,7 @@ namespace HyperMock.Tests.Core
         {
             var method = GetMethod("TestMethod3");
 
-            var parameters = _parameterList.BuildFrom(method, "test");
+            var parameters = ParameterList.BuildFrom(method, "test");
 
             parameters[0].Type.ShouldBe(ParameterType.Ref);
         }

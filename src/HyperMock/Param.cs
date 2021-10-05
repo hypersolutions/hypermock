@@ -1,12 +1,13 @@
 ﻿using System;
 using HyperMock.Matchers;
+// ReSharper disable UnusedParameter.Global
 
 namespace HyperMock
 {
     /// <summary>
     /// Mock helper for describing a parameter.
     /// </summary>
-    public class Param
+    public static class Param
     {
         /// <summary>
         /// Indicates that any value of the type is allowed and will resolve.
@@ -16,7 +17,7 @@ namespace HyperMock
         [ParameterMatcher(typeof(AnyParameterMatcher))]
         public static T IsAny<T>()
         {
-            return default(T);
+            return default;
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace HyperMock
         [ParameterMatcher(typeof(PredicateParameterMatcher))]
         public static T Is<T>(Func<T, bool> predicate)
         {
-            return default(T);
+            return default;
         }
 
         /// <summary>

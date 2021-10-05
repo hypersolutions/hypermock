@@ -32,7 +32,6 @@ To create a mock instance, simply call the _Mock.Create<T>_ static class:
 
 ```
 var mockService = Mock.Create<IAccountService>();
-
 ```
 
 This returns back an instance the _Mock_ class that contains all the setup and verify extensions. It also contains the mocked instance. You can pass this into your class:

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperMock", "src\HyperMock\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HyperMock.Tests", "test\HyperMock.Tests\HyperMock.Tests.csproj", "{20228694-B636-44F2-86A2-946F02F141E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMock.IntTests", "test\HyperMock.IntTests\HyperMock.IntTests.csproj", "{D3802772-7029-4AB2-9862-4A04D5456334}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,26 @@ Global
 		{20228694-B636-44F2-86A2-946F02F141E4}.Release|x64.Build.0 = Release|Any CPU
 		{20228694-B636-44F2-86A2-946F02F141E4}.Release|x86.ActiveCfg = Release|Any CPU
 		{20228694-B636-44F2-86A2-946F02F141E4}.Release|x86.Build.0 = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|ARM.Build.0 = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|ARM64.Build.0 = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|x64.Build.0 = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3802772-7029-4AB2-9862-4A04D5456334}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +94,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F0A19CF5-6808-4F36-BAC5-D03E13B7AB47} = {EF1A6C53-8194-4915-BA2F-67A6CEDBEF1E}
 		{20228694-B636-44F2-86A2-946F02F141E4} = {59DFCA2B-3E8E-41A8-8DF1-3F4D0CB9FA5D}
+		{D3802772-7029-4AB2-9862-4A04D5456334} = {59DFCA2B-3E8E-41A8-8DF1-3F4D0CB9FA5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A7C24E5-80A3-450F-922E-A97E98F2ACC6}

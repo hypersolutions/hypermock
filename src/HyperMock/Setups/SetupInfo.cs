@@ -6,10 +6,10 @@ namespace HyperMock.Setups
 {
     internal sealed class SetupInfo
     {
-        private readonly List<SetupValue> _values = new List<SetupValue>();
+        private readonly List<SetupValue> _values = new();
         private int _valuePointer;
         
-        internal string Name { get; set; }
+        internal string Name { get; init; }
         
         internal Parameter[] Parameters { get; set; }
         

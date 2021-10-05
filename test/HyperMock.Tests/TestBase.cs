@@ -10,7 +10,7 @@ namespace HyperMock.Tests
     /// <typeparam name="TSubject">Class under test</typeparam>
     public abstract class TestBase<TSubject>
     {
-        private readonly Dictionary<Type, Mock> _mocks = new Dictionary<Type, Mock>();
+        private readonly Dictionary<Type, Mock> _mocks = new();
         
         protected TestBase()
         {
@@ -21,7 +21,7 @@ namespace HyperMock.Tests
             foreach (var ctorParam in ctor.GetParameters())
             {
                 var method = typeof(Mock).GetMethod("Create", new[] { typeof(MockBehavior) });
-                var generic = method.MakeGenericMethod(ctorParam.ParameterType);
+                var generic = method!.MakeGenericMethod(ctorParam.ParameterType);
                 var mock = (Mock)generic.Invoke(this, new object[] { MockBehavior.Loose });
 
                 _mocks.Add(ctorParam.ParameterType, mock);

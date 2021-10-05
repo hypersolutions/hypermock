@@ -16,9 +16,9 @@ namespace HyperMock
             _helper = new MockProxyDispatcherHelper(this);
         }
 
-        VisitList IMockProxyDispatcher.Visits { get; } = new VisitList();
+        VisitList IMockProxyDispatcher.Visits { get; } = new();
 
-        SetupInfoList IMockProxyDispatcher.Setups { get; } = new SetupInfoList();
+        SetupInfoList IMockProxyDispatcher.Setups { get; } = new();
 
         MockBehavior IMockProxyDispatcher.MockBehavior { get; set; }
 

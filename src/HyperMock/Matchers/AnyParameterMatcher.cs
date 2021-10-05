@@ -5,9 +5,7 @@ namespace HyperMock.Matchers
         internal override bool IsMatch(object expected, object actual)
         {
             if (expected == null && actual == null) return true;
-            if (expected != null && actual != null && expected.GetType() != actual.GetType()) return false;
-
-            return true;
+            return expected == null || actual == null || expected.GetType() == actual.GetType();
         }
     }
 }

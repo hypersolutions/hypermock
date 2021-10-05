@@ -8,9 +8,7 @@ namespace HyperMock.Matchers
     {
         internal ParameterMatcherAttribute(Type type)
         {
-            var typeHelper = new TypeHelper();
-
-            if (!typeHelper.IsAssignableFrom(typeof(ParameterMatcher), type))
+            if (!TypeHelper.IsAssignableFrom(typeof(ParameterMatcher), type))
                 throw new ArgumentException($"Type {type} is not derived from ParameterMatcher.");
 
             ParameterMatcherType = type;

@@ -5,14 +5,12 @@ using HyperMock.Matchers;
 
 namespace HyperMock.Core
 {
-    internal sealed class ParameterList
+    internal static class ParameterList
     {
-        private static readonly ParameterMatcherFactory _matcherFactory = new ParameterMatcherFactory();
-
-        internal bool IsMatchFor(Parameter[] parameters, params object[] args)
+        internal static bool IsMatchFor(Parameter[] parameters, params object[] args)
         {
             if (args == null && parameters.Length == 0) return true;
-            if (args != null && args.Length == 0 && args.Length == parameters.Length) return true;
+            if (args is { Length: 0 } && args.Length == parameters.Length) return true;
 
             if (args != null && args.Length == parameters.Length)
             {
@@ -27,7 +25,7 @@ namespace HyperMock.Core
             return false;
         }
 
-        internal Parameter[] BuildFrom(MethodCallExpression body, LambdaExpression expression)
+        internal static Parameter[] BuildFrom(MethodCallExpression body, LambdaExpression expression)
         {
             var parameters = new List<Parameter>();
 
@@ -49,7 +47,7 @@ namespace HyperMock.Core
                     {
                         Value = value,
                         Type = GetParameterType(paramInfo),
-                        Matcher = _matcherFactory.Create(lambda)
+                        Matcher = ParameterMatcherFactory.Create(lambda)
                     });
                 }
             }
@@ -57,11 +55,11 @@ namespace HyperMock.Core
             return parameters.ToArray();
         }
 
-        internal Parameter[] BuildFrom(MethodBase method, params object[] args)
+        internal static Parameter[] BuildFrom(MethodBase method, params object[] args)
         {
             var parameters = new List<Parameter>();
 
-            if (args != null && args.Length > 0)
+            if (args is { Length: > 0 })
             {
                 var methodParameters = method.GetParameters();
 
@@ -85,9 +83,7 @@ namespace HyperMock.Core
         private static ParameterType GetParameterType(ParameterInfo paramInfo)
         {
             if (paramInfo.IsOut) return ParameterType.Out;
-            if (paramInfo.ParameterType.IsByRef) return ParameterType.Ref;
-
-            return ParameterType.In;
+            return paramInfo.ParameterType.IsByRef ? ParameterType.Ref : ParameterType.In;
         }
     }
 }

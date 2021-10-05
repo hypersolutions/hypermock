@@ -38,7 +38,7 @@ namespace HyperMock.Tests.Behaviors
         [Fact]
         public void ReturnsAttachesValueToSetup()
         {
-            var returnValue = 10;
+            const int returnValue = 10;
 
             _functionCall.Returns(returnValue);
 
@@ -48,7 +48,7 @@ namespace HyperMock.Tests.Behaviors
         [Fact]
         public void ReturnsAttachesDeferredFuncToSetup()
         {
-            var returnValue = 0;
+            const int returnValue = 0;
 
             _functionCall.Returns(() => returnValue);
 

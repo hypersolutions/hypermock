@@ -4,6 +4,9 @@ using HyperMock.Core;
 using HyperMock.Setups;
 using Shouldly;
 using Xunit;
+// ReSharper disable UnusedParameter.Local
+// ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBeMadeStatic.Local
 
 namespace HyperMock.Tests.Setups
 {
@@ -158,7 +161,7 @@ namespace HyperMock.Tests.Setups
             Expression<Func<int>> expression = () => TestProperty;
             var expectedSetupInfo = _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            var setupInfo = _setupInfoList.FindBy("get_TestProperty", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("get_TestProperty", Array.Empty<object>());
 
             setupInfo.ShouldBe(expectedSetupInfo);
         }
@@ -169,7 +172,7 @@ namespace HyperMock.Tests.Setups
             Expression<Func<int>> expression = () => TestProperty;
             _setupInfoList.AddOrGet(expression, CallType.GetProperty);
 
-            var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", Array.Empty<object>());
 
             setupInfo.ShouldBeNull();
         }
@@ -180,7 +183,7 @@ namespace HyperMock.Tests.Setups
             Expression<Func<int>> expression = () => TestProperty2;
             var expectedSetupInfo = _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            var setupInfo = _setupInfoList.FindBy("set_TestProperty2", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("set_TestProperty2", Array.Empty<object>());
 
             setupInfo.ShouldBe(expectedSetupInfo);
         }
@@ -191,7 +194,7 @@ namespace HyperMock.Tests.Setups
             Expression<Func<int>> expression = () => TestProperty2;
             _setupInfoList.AddOrGet(expression, CallType.SetProperty);
 
-            var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("get_UnknownTestProperty", Array.Empty<object>());
 
             setupInfo.ShouldBeNull();
         }
@@ -213,7 +216,7 @@ namespace HyperMock.Tests.Setups
             Expression<Action> expression = () => TestMethod(10, 20);
             _setupInfoList.AddOrGet(expression, CallType.Method);
 
-            var setupInfo = _setupInfoList.FindBy("UnknownTestMethod", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("UnknownTestMethod", Array.Empty<object>());
 
             setupInfo.ShouldBeNull();
         }
@@ -235,7 +238,7 @@ namespace HyperMock.Tests.Setups
             Expression<Func<int>> expression = () => TestFunction(10, 20);
             _setupInfoList.AddOrGet(expression, CallType.Function);
 
-            var setupInfo = _setupInfoList.FindBy("UnknownTestFunction", new object[0]);
+            var setupInfo = _setupInfoList.FindBy("UnknownTestFunction", Array.Empty<object>());
 
             setupInfo.ShouldBeNull();
         }
@@ -290,9 +293,8 @@ namespace HyperMock.Tests.Setups
 
         private int this[string name]
         {
-            get { return name != null ? TestProperty2 : 0; }
-            // ReSharper disable once UnusedMember.Local
-            set { TestProperty2 = value; }
+            get => name != null ? TestProperty2 : 0;
+            set => TestProperty2 = value;
         }
 
         private void TestMethod()
@@ -300,9 +302,7 @@ namespace HyperMock.Tests.Setups
 
         }
 
-        // ReSharper disable UnusedParameter.Local
         private void TestMethod(int x, int y)
-        // ReSharper restore UnusedParameter.Local
         {
 
         }
@@ -312,9 +312,7 @@ namespace HyperMock.Tests.Setups
             return 0;
         }
 
-        // ReSharper disable UnusedParameter.Local
         private int TestFunction(int x, int y)
-        // ReSharper restore UnusedParameter.Local
         {
             return 0;
         }

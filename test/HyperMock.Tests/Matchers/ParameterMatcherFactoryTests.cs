@@ -8,19 +8,12 @@ namespace HyperMock.Tests.Matchers
 {
     public class ParameterMatcherFactoryTests
     {
-        private ParameterMatcherFactory _factory;
-
-        public ParameterMatcherFactoryTests()
-        {
-            _factory = new ParameterMatcherFactory();
-        }
-
         [Fact]
         public void CreateMethodWithNoArgsReturnsExactMatcher()
         {
             Expression<Func<int>> expression = () => 10;
 
-            var matcher = _factory.Create(expression);
+            var matcher = ParameterMatcherFactory.Create(expression);
 
             matcher.ShouldBeOfType<ExactParameterMatcher>();
         }
@@ -30,7 +23,7 @@ namespace HyperMock.Tests.Matchers
         {
             Expression<Func<int>> expression = () => Param.Is<int>(p => p < 10);
 
-            var matcher = _factory.Create(expression);
+            var matcher = ParameterMatcherFactory.Create(expression);
 
             matcher.ShouldBeOfType<PredicateParameterMatcher>();
         }
@@ -40,7 +33,7 @@ namespace HyperMock.Tests.Matchers
         {
             Expression<Func<int>> expression = () => Param.IsAny<int>();
 
-            var matcher = _factory.Create(expression);
+            var matcher = ParameterMatcherFactory.Create(expression);
 
             matcher.ShouldBeOfType<AnyParameterMatcher>();
         }
@@ -50,7 +43,7 @@ namespace HyperMock.Tests.Matchers
         {
             Expression<Func<string>> expression = () => Param.IsRegex("^[0-9]{8}$");
 
-            var matcher = _factory.Create(expression);
+            var matcher = ParameterMatcherFactory.Create(expression);
 
             matcher.ShouldBeOfType<RegexParameterMatcher>();
         }

@@ -3,7 +3,7 @@ using System;
 namespace HyperMock.Exceptions
 {
     /// <summary>
-    /// Defines a verifcation framework exception thrown when a verify check fails.
+    /// Defines a verification framework exception thrown when a verify check fails.
     /// </summary>
     public class VerificationException : Exception
     {

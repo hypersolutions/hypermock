@@ -4,6 +4,8 @@ using System.Reflection;
 using HyperMock.Core;
 using Shouldly;
 using Xunit;
+// ReSharper disable UnusedMember.Local
+// ReSharper disable MemberCanBeMadeStatic.Local
 
 namespace HyperMock.Tests.Core
 {
@@ -157,7 +159,7 @@ namespace HyperMock.Tests.Core
         public void FindByReturnsGetPropertyVisit()
         {
             var method = GetMethod("get_Age");
-            _visits.Record(method, new object[0]);
+            _visits.Record(method, Array.Empty<object>());
             Expression<Func<int>> expression = () => Age;
 
             var visits = _visits.FindBy(expression, CallType.GetProperty);
@@ -169,7 +171,7 @@ namespace HyperMock.Tests.Core
         public void FindByReturnsEmptyGetPropertyVisit()
         {
             var method = GetMethod("get_Age");
-            _visits.Record(method, new object[0]);
+            _visits.Record(method, Array.Empty<object>());
             Expression<Func<string>> expression = () => Gender;
 
             var visits = _visits.FindBy(expression, CallType.GetProperty);
@@ -193,7 +195,7 @@ namespace HyperMock.Tests.Core
         public void FindByReturnsEmptySetPropertyVisit()
         {
             var method = GetMethod("set_Age");
-            _visits.Record(method, new object[0]);
+            _visits.Record(method, Array.Empty<object>());
             Expression<Func<string>> expression = () => Gender;
 
             var visits = _visits.FindBy(expression, CallType.SetProperty);
@@ -243,9 +245,8 @@ namespace HyperMock.Tests.Core
 
         private int this[string name]
         {
-            get { return name != null ? Age : 0; }
-            // ReSharper disable once UnusedMember.Local
-            set { Age = value; }
+            get => name != null ? Age : 0;
+            set => Age = value;
         }
 
         private void Save(int x)
@@ -253,7 +254,6 @@ namespace HyperMock.Tests.Core
             System.Diagnostics.Debug.WriteLine(x);
         }
 
-        // ReSharper disable once UnusedMember.Local
         private void Save2(int x, string text)
         {
             System.Diagnostics.Debug.WriteLine(text + x);

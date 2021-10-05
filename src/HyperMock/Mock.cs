@@ -11,9 +11,6 @@ namespace HyperMock
     /// </summary>
     public class Mock
     {
-        private static readonly TypeHelper _typeHelper = new TypeHelper();
-        private static readonly MockHelper _mockHelper = new MockHelper();
-
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
@@ -43,7 +40,7 @@ namespace HyperMock
         {
             CheckInstanceType(typeof(T));
 
-            return _mockHelper.Create<T>(behavior);
+            return MockHelper.Create<T>(behavior);
         }
 
         /// <summary>
@@ -56,7 +53,7 @@ namespace HyperMock
         {
             CheckInstanceType(type);
 
-            return _mockHelper.Create(type, behavior);
+            return MockHelper.Create(type, behavior);
         }
 
         /// <summary>
@@ -72,7 +69,7 @@ namespace HyperMock
 
         private static void CheckInstanceType(Type instanceType)
         {
-            if (!_typeHelper.IsInterface(instanceType))
+            if (!TypeHelper.IsInterface(instanceType))
                 throw new NotSupportedException("Only interface types are supported for proxy generation.");
         }
     }
@@ -91,7 +88,7 @@ namespace HyperMock
         /// <param name="obj">Proxy object</param>
         /// <param name="dispatcher">Dispatcher</param>
         /// <param name="behavior">Mock behavior to apply</param>
-        public Mock(T obj, MockProxyDispatcher dispatcher, MockBehavior behavior) : base(obj, dispatcher, behavior)
+        public Mock(T obj, IMockProxyDispatcher dispatcher, MockBehavior behavior) : base(obj, dispatcher, behavior)
         {
         }
 
@@ -151,7 +148,7 @@ namespace HyperMock
         }
         
         /// <summary>
-        /// Verifies the call occurrence of the method descibed.
+        /// Verifies the call occurrence of the method described.
         /// </summary>
         /// <param name="expression">Method expression</param>
         /// <param name="occurred">Occurrence pattern to check</param>
@@ -165,7 +162,7 @@ namespace HyperMock
         }
 
         /// <summary>
-        /// Verifies the call occurrence of the function descibed.
+        /// Verifies the call occurrence of the function described.
         /// </summary>
         /// <param name="expression">Function expression</param>
         /// <param name="occurred">Occurrence pattern to check</param>
@@ -179,7 +176,7 @@ namespace HyperMock
         }
 
         /// <summary>
-        /// Verifies the call occurrence of the get property descibed.
+        /// Verifies the call occurrence of the get property described.
         /// </summary>
         /// <param name="expression">Get property expression</param>
         /// <param name="occurred">Occurrence pattern to check</param>
@@ -193,7 +190,7 @@ namespace HyperMock
         }
 
         /// <summary>
-        /// Verifies the call occurrence of the set property descibed.
+        /// Verifies the call occurrence of the set property described.
         /// </summary>
         /// <param name="expression">Set property expression</param>
         /// <param name="occurred">Occurrence pattern to check</param>
@@ -207,7 +204,7 @@ namespace HyperMock
         }
 
         /// <summary>
-        /// Verifies the call occurrence of the set property descibed.
+        /// Verifies the call occurrence of the set property described.
         /// </summary>
         /// <param name="expression">Set property expression</param>
         /// <param name="propertyValue">Set value to check occurred</param>
@@ -229,7 +226,7 @@ namespace HyperMock
         /// <param name="args">Event args instance</param>
         public void Raise<TArgs>(Action<T> expression, TArgs args) where TArgs : EventArgs
         {
-            if (_eventDispatcher == null) _eventDispatcher = new EventDispatcher<T>(this);
+            _eventDispatcher ??= new EventDispatcher<T>(this);
 
             _eventDispatcher.Raise(expression, args);
         }

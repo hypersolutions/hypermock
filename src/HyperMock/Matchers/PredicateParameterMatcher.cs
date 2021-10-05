@@ -15,8 +15,7 @@ namespace HyperMock.Matchers
 
                 if (predicate == null) throw new InvalidOperationException("The predicate is undefined.");
 
-                var predicateHelper = new PredicateHelper();
-                return predicateHelper.Invoke(predicate, actual);
+                return PredicateHelper.Invoke(predicate, actual);
             }
             catch (Exception error)
             {
